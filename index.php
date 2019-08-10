@@ -53,11 +53,10 @@ $lots = [
 
 function formatPrice($price)
 {
-    if (is_numeric($price)) {
-        return number_format(ceil($price), 0, ',', ' ') . ' ₽';
-    } else {
+    if (!is_numeric($price)) {
         return false;
     }
+    return number_format(ceil($price), 0, ',', ' ') . ' ₽';
 }
 ?>
 <!DOCTYPE html>
