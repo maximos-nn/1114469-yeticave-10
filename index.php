@@ -50,6 +50,14 @@ $lots = [
         'url' => '/img/lot-6.jpg'
     ]
 ];
+
+function formatPrice($price)
+{
+    if (!is_numeric($price)) {
+        return false;
+    }
+    return number_format(ceil($price), 0, ',', ' ') . ' ₽';
+}
 ?>
 <!DOCTYPE html>
 <html lang="ru">
@@ -123,7 +131,7 @@ $lots = [
                         <div class="lot__state">
                             <div class="lot__rate">
                                 <span class="lot__amount">Стартовая цена</span>
-                                <span class="lot__cost"><?= $lot['price'] ?><b class="rub">р</b></span>
+                                <span class="lot__cost"><?= formatPrice($lot['price']) ?></span>
                             </div>
                             <div class="lot__timer timer">
                                 12:23
