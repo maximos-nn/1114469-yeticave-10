@@ -158,7 +158,11 @@ function clearSpecials(string $string)
 
 function getExpiration(string $lotDate)
 {
-    $diff = date_diff(date_create(), date_create($lotDate));
+    $lotDate = date_create($lotDate);
+    if (!$lotDate) {
+        return ['00', '00'];
+    }
+    $diff = date_diff(date_create(), $lotDate);
     if (date_interval_format($diff, '%r')) {
         return ['00', '00'];
     }
