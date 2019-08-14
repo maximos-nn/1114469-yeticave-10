@@ -156,4 +156,17 @@ function clearSpecials(string $string)
     return htmlspecialchars($string);
 }
 
-
+function getExpiration(string $lotDate)
+{
+    $diff = date_diff(date_create(), date_create($lotDate));
+    if (date_interval_format($diff, '%r')) {
+        return ['00', '00'];
+    }
+    $days = date_interval_format($diff, '%a');
+    $hours = date_interval_format($diff, '%H');
+    $minutes = date_interval_format($diff, '%I');
+    if ($days) {
+        return [$days * 24 + $hours, $minutes];
+    }
+    return [$hours, $minutes];
+}
