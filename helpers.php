@@ -143,4 +143,17 @@ function include_template($name, array $data = []) {
     return $result;
 }
 
+function formatPrice($price)
+{
+    if (!is_numeric($price)) {
+        return false;
+    }
+    return number_format(ceil($price), 0, ',', ' ') . ' ₽';
+}
+
+function clearSpecials(string $string)
+{
+    return htmlspecialchars($string);
+}
+
 

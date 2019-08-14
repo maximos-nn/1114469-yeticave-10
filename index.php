@@ -51,19 +51,6 @@ $lots = [
     ]
 ];
 
-function formatPrice($price)
-{
-    if (!is_numeric($price)) {
-        return false;
-    }
-    return number_format(ceil($price), 0, ',', ' ') . ' ₽';
-}
-
-function clearSpecials(string $string)
-{
-    return htmlspecialchars($string);
-}
-
 require_once 'helpers.php';
 $mainContent = include_template('main.php', ['categories' => $categories, 'lots' => $lots]);
 $layoutContent = include_template(
