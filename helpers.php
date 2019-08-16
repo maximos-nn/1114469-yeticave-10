@@ -143,6 +143,13 @@ function include_template($name, array $data = []) {
     return $result;
 }
 
+/**
+ * Форматирует цену
+ *
+ * @param mixed $price
+ *
+ * @return string|false
+ */
 function formatPrice($price)
 {
     if (!is_numeric($price)) {
@@ -151,11 +158,25 @@ function formatPrice($price)
     return number_format(ceil($price), 0, ',', ' ') . ' ₽';
 }
 
+/**
+ * Преобразует специальные символы в строке.
+ *
+ * @param string $string
+ *
+ * @return string
+ */
 function clearSpecials(string $string)
 {
     return htmlspecialchars($string);
 }
 
+/**
+ * Возвращает период до указанной даты в часах и минутах.
+ *
+ * @param  string $date Дата из будущего
+ *
+ * @return string[] Массив, где первый элемент — целое количество часов до даты, а второй — остаток в минутах
+ */
 function getTimeUntil(string $date): array
 {
     $date = date_create($date);
