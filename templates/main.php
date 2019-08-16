@@ -27,9 +27,9 @@
                                 <span class="lot__amount">Стартовая цена</span>
                                 <span class="lot__cost"><?= formatPrice(clearSpecials($lot['price'])) ?></span>
                             </div>
-                            <?php $expiration = getExpiration(clearSpecials($lot['expiration'])); ?>
-                            <div class="lot__timer timer<?= $expiration[0] == '00' ? ' timer--finishing' : '' ?>">
-                                <?= implode(':',$expiration) ?>
+                            <?php $expiration = getTimeUntil(clearSpecials($lot['expiration'])); ?>
+                            <div class="lot__timer timer <?= $expiration['hours'] === '00' ? 'timer--finishing' : '' ?>">
+                                <?= $expiration['hours'] . ':' . $expiration['minutes'] ?>
                             </div>
                         </div>
                     </div>
