@@ -17,7 +17,7 @@ CREATE TABLE `categories` (
 CREATE TABLE `users` (
     `id` int unsigned NOT NULL AUTO_INCREMENT PRIMARY KEY,
     `add_date` datetime NOT NULL DEFAULT NOW(),
-    `email` CHAR(255) NOT NULL,
+    `email` CHAR(255) NOT NULL UNIQUE,
     `name` CHAR(255) NOT NULL,
     `password` CHAR(255) NOT NULL,
     `avatar_path` CHAR(255),
