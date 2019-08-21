@@ -10,27 +10,27 @@ DROP TABLE IF EXISTS `categories`;
 
 CREATE TABLE `categories` (
     id int unsigned NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `name` char(255) NOT NULL UNIQUE KEY,
-    `code` char(255) NOT NULL UNIQUE KEY
+    `name` varchar(255) NOT NULL UNIQUE KEY,
+    `code` varchar(255) NOT NULL UNIQUE KEY
 )  CHARSET=utf8;
 
 CREATE TABLE `users` (
     `id` int unsigned NOT NULL AUTO_INCREMENT PRIMARY KEY,
     `add_date` datetime NOT NULL DEFAULT NOW(),
-    `email` CHAR(255) NOT NULL UNIQUE,
-    `name` CHAR(255) NOT NULL,
-    `password` CHAR(255) NOT NULL,
-    `avatar_path` CHAR(255),
+    `email` varchar(255) NOT NULL UNIQUE,
+    `name` varchar(255) NOT NULL,
+    `password` varchar(255) NOT NULL,
+    `avatar_path` varchar(255),
     `contact` TEXT
 )  CHARSET=utf8;
 
 CREATE TABLE `lots` (
   `id` int unsigned NOT NULL AUTO_INCREMENT PRIMARY KEY,
-  `add_date` datetime NOT NULL DEFAULT NOW(),
-  `title` char(255) NOT NULL,
+  `creation_time` datetime NOT NULL DEFAULT NOW(),
+  `title` varchar(255) NOT NULL,
   `description` text,
-  `image_path` char(255) NOT NULL,
-  `price` decimal(10,2) NOT NULL,
+  `image_path` varchar(255) NOT NULL,
+  `price` int unsigned NOT NULL,
   `expire_date` datetime NOT NULL,
   `bid_step` int unsigned NOT NULL,
   `user_id` int unsigned NOT NULL,
@@ -48,7 +48,7 @@ CREATE TABLE `lots` (
 
 CREATE TABLE `bids` (
   `id` int unsigned NOT NULL AUTO_INCREMENT PRIMARY KEY,
-  `add_date` datetime NOT NULL DEFAULT NOW(),
+  `creation_time` datetime NOT NULL DEFAULT NOW(),
   `amount` int unsigned NOT NULL,
   `user_id` int unsigned NOT NULL,
   `lot_id` int unsigned NOT NULL,
