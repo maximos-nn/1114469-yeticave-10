@@ -47,7 +47,9 @@ SELECT l.title, l.price, l.image_path,
 (SELECT amount FROM bids WHERE lot_id=l.id ORDER BY creation_time DESC LIMIT 1) `sum`, -- или JOIN
 c.name
 FROM lots l JOIN categories c ON l.category_id=c.id
-WHERE l.expire_date > NOW(); -- l.winner_id IS NULL?
+WHERE l.expire_date > NOW() -- l.winner_id IS NULL?
+-- самые новые. наверно, ограничение должно быть
+ORDER BY creation_time DESC; -- LIMIT x
 
 -- показать лот по его id. Получите также название категории, к которой принадлежит лот
 SET @lot_id=1;
