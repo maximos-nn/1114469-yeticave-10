@@ -49,7 +49,7 @@ c.name
 FROM lots l JOIN categories c ON l.category_id=c.id
 WHERE l.expire_date > NOW() -- l.winner_id IS NULL?
 -- самые новые. наверно, ограничение должно быть
-ORDER BY creation_time DESC; -- LIMIT x
+ORDER BY l.creation_time DESC; -- LIMIT x
 
 -- показать лот по его id. Получите также название категории, к которой принадлежит лот
 SET @lot_id=1;
