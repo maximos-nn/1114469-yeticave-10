@@ -16,7 +16,7 @@ CREATE TABLE `categories` (
 
 CREATE TABLE `users` (
     `id` int unsigned NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `add_date` datetime NOT NULL DEFAULT NOW(),
+    `creation_time` datetime NOT NULL DEFAULT NOW(),
     `email` varchar(255) NOT NULL UNIQUE,
     `name` varchar(255) NOT NULL,
     `password` varchar(255) NOT NULL,
