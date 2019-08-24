@@ -1,12 +1,3 @@
--- Вставка категорий
-INSERT INTO `categories` (`name`, `code`)
-VALUES ('Доски и лыжи', 'boards'),
-('Крепления', 'attachment'),
-('Ботинки', 'boots'),
-('Одежда', 'clothing'),
-('Инструменты', 'tools'),
-('Разное', 'other');
-
 -- Вставка пользователей
 INSERT INTO `users` (`email`, `name`, `password`)
 VALUES ('ivanovii@yandex.ru', 'Иванов Иван Иванович', 'VmjXgcVb9PYtSOS4u0QO'),
@@ -40,13 +31,12 @@ SELECT * FROM `categories`;
 получить самые новые, открытые лоты.
 Каждый лот должен включать название, стартовую цену, ссылку на изображение, цену, название категории
 */
-SELECT l.title, l.price, l.image_path,
--- Если это не ошибка, и требуется конечная цена, то
-(SELECT amount FROM bids WHERE lot_id=l.id ORDER BY id DESC LIMIT 1) `sum`, -- или JOIN
+SELECT l.id, l.title, l.price, l.image_path,
+(SELECT amount FROM bids WHERE lot_id=l.id ORDER BY id DESC LIMIT 1) `sum`,
 -- Можно добавить поле в lots для хранения текущей цены лота
 c.name
 FROM lots l JOIN categories c ON l.category_id=c.id
-WHERE l.expire_date > NOW() -- l.winner_id IS NULL?
+WHERE l.expire_date > NOW()
 -- самые новые. наверно, ограничение должно быть
 ORDER BY l.creation_time DESC, l.id DESC; -- LIMIT x
 
@@ -66,4 +56,4 @@ WHERE id=@lot_id;
 SELECT *
 FROM bids
 WHERE lot_id=@lot_id
-ORDER BY creation_time DESC, amount DESC; -- id DESC?
+ORDER BY creation_time DESC, id DESC;
