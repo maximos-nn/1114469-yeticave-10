@@ -5,18 +5,16 @@ $user_name = 'maximos';
 
 date_default_timezone_set('Europe/Moscow');
 require_once 'helpers.php';
+
+if (!file_exists('config.php')) {
+    showError('Создайте файл config.php на основе config.sample.php и выполните настройку.');
+}
 $config = require 'config.php';
 
-$dbConnection = dbGetConnection($config['db']);
+$dbConnection = dbConnect($config['db']);
 
-if (!$dbConnection) {
-    showError(mysqli_connect_error());
-}
-
-mysqli_set_charset($dbConnection, 'utf8');
-
-$categories = dbGetCategories($dbConnection);
-$lots = dbGetOpenLots($dbConnection);
+$categories = getCategories($dbConnection);
+$lots = getOpenLots($dbConnection);
 
 $mainContent = include_template('main.php', ['categories' => $categories, 'lots' => $lots]);
 $layoutContent = include_template(
