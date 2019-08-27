@@ -44,7 +44,7 @@ function is_date_valid(string $date): bool
  *
  * @return string Рассчитанная форма множественнго числа
  */
-function get_noun_plural_form (int $number, string $one, string $two, string $many): string
+function get_noun_plural_form(int $number, string $one, string $two, string $many): string
 {
     $number = (int) $number;
     $mod10 = $number % 10;
@@ -102,7 +102,7 @@ function include_template(string $name, array $data = []): string
 function formatPrice(string $price): string
 {
     if (!is_numeric($price)) {
-        return false;
+        return '';
     }
     return number_format(ceil($price), 0, ',', ' ') . ' ₽';
 }
