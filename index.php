@@ -4,7 +4,8 @@ $is_auth = rand(0, 1);
 $user_name = 'maximos';
 
 date_default_timezone_set('Europe/Moscow');
-require_once 'helpers.php';
+require_once '/functions/template.php';
+require_once '/functions/db.php';
 
 if (!file_exists('config.php')) {
     showError('Создайте файл config.php на основе config.sample.php и выполните настройку.');
