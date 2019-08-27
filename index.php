@@ -4,8 +4,8 @@ $is_auth = rand(0, 1);
 $user_name = 'maximos';
 
 date_default_timezone_set('Europe/Moscow');
-require_once '/functions/template.php';
-require_once '/functions/db.php';
+require_once 'functions/template.php';
+require_once 'functions/db.php';
 
 if (!file_exists('config.php')) {
     showError('Создайте файл config.php на основе config.sample.php и выполните настройку.');
@@ -15,7 +15,9 @@ $config = require 'config.php';
 $dbConnection = dbConnect($config['db']);
 
 $categories = getCategories($dbConnection);
-$lots = getOpenLots($dbConnection);
+$lots = getActiveLots($dbConnection);
+
+dbClose($dbConnection);
 
 $mainContent = include_template('main.php', ['categories' => $categories, 'lots' => $lots]);
 $layoutContent = include_template(

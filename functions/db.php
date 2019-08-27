@@ -15,8 +15,7 @@ function db_get_prepare_stmt(mysqli $link, string $sql, array $data = []): mysql
     $stmt = mysqli_prepare($link, $sql);
 
     if ($stmt === false) {
-        $errorMsg = 'Не удалось инициализировать подготовленное выражение: ' . mysqli_error($link);
-        die($errorMsg);
+        showError('Не удалось инициализировать подготовленное выражение: ' . mysqli_error($link));
     }
 
     if ($data) {
@@ -48,8 +47,7 @@ function db_get_prepare_stmt(mysqli $link, string $sql, array $data = []): mysql
         $func(...$values);
 
         if (mysqli_errno($link) > 0) {
-            $errorMsg = 'Не удалось связать подготовленное выражение с параметрами: ' . mysqli_error($link);
-            die($errorMsg);
+            showError('Не удалось связать подготовленное выражение с параметрами: ' . mysqli_error($link));
         }
     }
 
@@ -74,20 +72,23 @@ function getCategories(mysqli $dbConnection): array
  * @param mysqli $dbConnection Подключение к БД
  * @return array Массив записей
  */
-function getOpenLots(mysqli $dbConnection): array
+function getActiveLots(mysqli $dbConnection): array
 {
     $sqlQuery = 'SELECT l.id, l.title `name`, l.image_path `url`, l.expire_date expiration,
     IFNULL((SELECT amount FROM bids WHERE lot_id=l.id ORDER BY id DESC LIMIT 1), l.price) price,
-    c.name category
+    c.name category,
+    concat(
+		case when timestampdiff(HOUR, now(), expire_date)<10
+        then lpad(timestampdiff(HOUR, now(), expire_date), 2, "0")
+        else timestampdiff(HOUR, now(), expire_date) end,
+        ":",
+        lpad(timestampdiff(MINUTE, now(), expire_date)%60, 2, "0")
+        ) timervalue,
+	case when timestampdiff(HOUR, now(), expire_date)=0 then "timer--finishing"
+		else "" end timerclass
     FROM lots l JOIN categories c ON l.category_id=c.id
     WHERE l.expire_date > NOW()
     ORDER BY l.creation_time DESC, l.id DESC LIMIT 9';
-
-    /*
-    Можно сюда перенести логику обработки оставшегося времени.
-    Добавить элементы массива 'timer' и 'timerclass', например.
-    Тогда в шаблоне будет "чище".
-    */
 
     return dbFetchData($dbConnection, $sqlQuery);
 }
@@ -137,4 +138,15 @@ function dbConnect($dbConfig): mysqli
     mysqli_set_charset($dbConnection, 'utf8');
 
     return $dbConnection;
+}
+
+/**
+ * Закрывает соединение с БД.
+ *
+ * @param mysqli $dbConnection Подключение к БД
+ * @return boolean Результат операции
+ */
+function dbClose(mysqli $dbConnection): bool
+{
+    return mysqli_close($dbConnection);
 }
