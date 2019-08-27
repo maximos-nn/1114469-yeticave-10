@@ -195,3 +195,101 @@ function getTimeUntil(string $date): array
     }
     return ['hours' => $hours, 'minutes' => $minutes];
 }
+
+/**
+ * Отображает сообщение об ошибке.
+ * **Завершает выполнение скрипта.**
+ *
+ * @param string $errMessage Выводимое сообщение
+ * @return void
+ */
+function showError(string $errMessage): void
+{
+    exit(include_template(
+        'error.php',
+        ['error' => $errMessage]
+    ));
+}
+
+/**
+ * Запрашивает категории в БД.
+ *
+ * @param mysqli $dbConnection Подключение к БД
+ * @return array Массив записей
+ */
+function getCategories(mysqli $dbConnection): array
+{
+    $sqlQuery = 'SELECT * FROM `categories`';
+    return dbFetchData($dbConnection, $sqlQuery);
+}
+
+/**
+ * Запрашивает открытые лоты в БД.
+ *
+ * @param mysqli $dbConnection Подключение к БД
+ * @return array Массив записей
+ */
+function getOpenLots(mysqli $dbConnection): array
+{
+    $sqlQuery = 'SELECT l.id, l.title `name`, l.image_path `url`, l.expire_date expiration,
+    IFNULL((SELECT amount FROM bids WHERE lot_id=l.id ORDER BY id DESC LIMIT 1), l.price) price,
+    c.name category
+    FROM lots l JOIN categories c ON l.category_id=c.id
+    WHERE l.expire_date > NOW()
+    ORDER BY l.creation_time DESC, l.id DESC LIMIT 9';
+
+    /*
+    Можно сюда перенести логику обработки оставшегося времени.
+    Добавить элементы массива 'timer' и 'timerclass', например.
+    Тогда в шаблоне будет "чище".
+    */
+
+    return dbFetchData($dbConnection, $sqlQuery);
+}
+
+/**
+ * Выполняет запрос к БД и возвращает результат в виде ассоциативного массива.
+ *
+ * @param mysqli $dbConnection Подключение к БД
+ * @param string $sqlQuery Строка запроса
+ * @return array Массив записей
+ */
+function dbFetchData(mysqli $dbConnection, string $sqlQuery): array
+{
+    $sqlResult = mysqli_query($dbConnection, $sqlQuery);
+
+    if (!$sqlResult) {
+        showError(mysqli_error($dbConnection));
+    }
+
+    return mysqli_fetch_all($sqlResult, MYSQLI_ASSOC);
+}
+
+/**
+ * Устанавливает соединение с БД.
+ * Принимает массив параметров с ключами 'host', 'user', 'password', 'database'.
+ *
+ * @param string[] $dbConfig Массив параметров подключения
+ * @return mysqli Объект подключения к БД
+ */
+function dbConnect($dbConfig): mysqli
+{
+    if (empty($dbConfig)) {
+        showError('Некорректная конфигурация подключения к базе данных.');
+    }
+
+    $dbConnection = mysqli_connect(
+        $dbConfig['host'],
+        $dbConfig['user'],
+        $dbConfig['password'],
+        $dbConfig['database']
+    );
+
+    if (!$dbConnection) {
+        showError(mysqli_connect_error());
+    }
+
+    mysqli_set_charset($dbConnection, 'utf8');
+
+    return $dbConnection;
+}
