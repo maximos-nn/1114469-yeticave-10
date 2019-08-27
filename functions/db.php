@@ -1,5 +1,4 @@
 <?php
-require_once 'template.php';
 
 /**
  * Создает подготовленное выражение на основе готового SQL запроса и переданных данных
@@ -15,7 +14,8 @@ function db_get_prepare_stmt(mysqli $link, string $sql, array $data = []): mysql
     $stmt = mysqli_prepare($link, $sql);
 
     if ($stmt === false) {
-        showError('Не удалось инициализировать подготовленное выражение: ' . mysqli_error($link));
+        $errorMsg = 'Ошибка при работе с БД. Не удалось инициализировать подготовленное выражение: ' . mysqli_error($link);
+        exit($errorMsg);
     }
 
     if ($data) {
@@ -47,7 +47,8 @@ function db_get_prepare_stmt(mysqli $link, string $sql, array $data = []): mysql
         $func(...$values);
 
         if (mysqli_errno($link) > 0) {
-            showError('Не удалось связать подготовленное выражение с параметрами: ' . mysqli_error($link));
+            $errorMsg = 'Ошибка при работе с БД. Не удалось связать подготовленное выражение с параметрами: ' . mysqli_error($link);
+            exit($errorMsg);
         }
     }
 
@@ -76,16 +77,7 @@ function getActiveLots(mysqli $dbConnection): array
 {
     $sqlQuery = 'SELECT l.id, l.title `name`, l.image_path `url`, l.expire_date expiration,
     IFNULL((SELECT amount FROM bids WHERE lot_id=l.id ORDER BY id DESC LIMIT 1), l.price) price,
-    c.name category,
-    concat(
-		case when timestampdiff(HOUR, now(), expire_date)<10
-        then lpad(timestampdiff(HOUR, now(), expire_date), 2, "0")
-        else timestampdiff(HOUR, now(), expire_date) end,
-        ":",
-        lpad(timestampdiff(MINUTE, now(), expire_date)%60, 2, "0")
-        ) timervalue,
-	case when timestampdiff(HOUR, now(), expire_date)=0 then "timer--finishing"
-		else "" end timerclass
+    c.name category
     FROM lots l JOIN categories c ON l.category_id=c.id
     WHERE l.expire_date > NOW()
     ORDER BY l.creation_time DESC, l.id DESC LIMIT 9';
@@ -105,7 +97,7 @@ function dbFetchData(mysqli $dbConnection, string $sqlQuery): array
     $sqlResult = mysqli_query($dbConnection, $sqlQuery);
 
     if (!$sqlResult) {
-        showError(mysqli_error($dbConnection));
+        exit('Ошибка при работе с БД: ' . mysqli_error($dbConnection));
     }
 
     return mysqli_fetch_all($sqlResult, MYSQLI_ASSOC);
@@ -121,7 +113,7 @@ function dbFetchData(mysqli $dbConnection, string $sqlQuery): array
 function dbConnect($dbConfig): mysqli
 {
     if (empty($dbConfig)) {
-        showError('Некорректная конфигурация подключения к базе данных.');
+        exit('Некорректная конфигурация подключения к БД.');
     }
 
     $dbConnection = mysqli_connect(
@@ -132,7 +124,7 @@ function dbConnect($dbConfig): mysqli
     );
 
     if (!$dbConnection) {
-        showError(mysqli_connect_error());
+        exit('Ошибка при подключении к БД: ' . mysqli_connect_error());
     }
 
     mysqli_set_charset($dbConnection, 'utf8');
