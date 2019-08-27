@@ -217,7 +217,7 @@ function showError(string $errMessage): void
  * @param mysqli $dbConnection Подключение к БД
  * @return array Массив записей
  */
-function getCategories($dbConnection): array
+function getCategories(mysqli $dbConnection): array
 {
     $sqlQuery = 'SELECT * FROM `categories`';
     return dbFetchData($dbConnection, $sqlQuery);
@@ -229,7 +229,7 @@ function getCategories($dbConnection): array
  * @param mysqli $dbConnection Подключение к БД
  * @return array Массив записей
  */
-function getOpenLots($dbConnection): array
+function getOpenLots(mysqli $dbConnection): array
 {
     $sqlQuery = 'SELECT l.id, l.title `name`, l.image_path `url`, l.expire_date expiration,
     IFNULL((SELECT amount FROM bids WHERE lot_id=l.id ORDER BY id DESC LIMIT 1), l.price) price,
@@ -270,9 +270,9 @@ function dbFetchData(mysqli $dbConnection, string $sqlQuery): array
  * Принимает массив параметров с ключами 'host', 'user', 'password', 'database'.
  *
  * @param string[] $dbConfig Массив параметров подключения
- * @return void
+ * @return mysqli Объект подключения к БД
  */
-function dbConnect($dbConfig)
+function dbConnect($dbConfig): mysqli
 {
     if (empty($dbConfig)) {
         showError('Некорректная конфигурация подключения к базе данных.');
