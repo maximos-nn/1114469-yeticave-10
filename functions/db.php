@@ -142,3 +142,21 @@ function dbClose(mysqli $dbConnection): bool
 {
     return mysqli_close($dbConnection);
 }
+
+/**
+ * Запрашивает информацию о лоте в БД по идентификатору.
+ *
+ * @param mysqli $dbConnection Подключение к БД
+ * @param int $id Идентификатор лота
+ * @return array Запись в виде ассоциативного массива
+ */
+function getLotById(mysqli $dbConnection, int $id): array
+{
+    $sqlQuery = 'SELECT l.id, l.title `name`, l.image_path `url`, l.expire_date expiration,
+    IFNULL((SELECT amount FROM bids WHERE lot_id=l.id ORDER BY id DESC LIMIT 1), l.price) price,
+    l.bid_step step, IFNULL(l.description, "") `description`, c.name category
+    FROM lots l JOIN categories c ON l.category_id=c.id
+    WHERE l.id=' . $id;
+
+    return mysqli_fetch_assoc(mysqli_query($dbConnection, $sqlQuery)) ?? [];
+}

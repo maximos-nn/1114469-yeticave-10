@@ -42,9 +42,7 @@
     </div>
 </header>
 
-<main class="container">
-    <?= $mainContent ?>
-</main>
+<?= $mainContent ?>
 </div>
 
 <footer class="main-footer">

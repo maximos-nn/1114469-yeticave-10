@@ -159,3 +159,15 @@ function showError(string $errMessage): void
         ['error' => $errMessage]
     ));
 }
+
+/**
+ * Вычисляет минимальную допустимую ставку
+ *
+ * @param string $price Текущая цена
+ * @param string $step Шаг ставки
+ * @return string Минимальная ставка
+ */
+function calcNextBid(string $price, string $step): string
+{
+    return strval(intval($price) + intval($step));
+}
