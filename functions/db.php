@@ -156,7 +156,29 @@ function getLotById(mysqli $dbConnection, int $id): array
     IFNULL((SELECT amount FROM bids WHERE lot_id=l.id ORDER BY id DESC LIMIT 1), l.price) price,
     l.bid_step step, IFNULL(l.description, "") `description`, c.name category
     FROM lots l JOIN categories c ON l.category_id=c.id
-    WHERE l.id=' . $id;
+    WHERE l.id=?';
 
-    return mysqli_fetch_assoc(mysqli_query($dbConnection, $sqlQuery)) ?? [];
+    return dbFetchStmtData($dbConnection, $sqlQuery, [$id])[0] ?? [];
+}
+
+/**
+ * Выполняет подготавливаемый запрос к БД и возвращает результат в виде ассоциативного массива.
+ *
+ * @param mysqli $dbConnection Подключение к БД
+ * @param string $sqlQuery Шаблон запроса с псевдопеременными
+ * @param array $data Данные для псевдопеременных
+ * @return array
+ */
+function dbFetchStmtData(mysqli $dbConnection, string $sqlQuery, array $data = []): array
+{
+    $result = [];
+    $stmt = dbGetPrepareStmt($dbConnection, $sqlQuery, $data);
+    mysqli_stmt_execute($stmt);
+    $res = mysqli_stmt_get_result($stmt);
+    if ($res) {
+        $result = mysqli_fetch_all($res, MYSQLI_ASSOC);
+    }
+    mysqli_stmt_close($stmt);
+    mysqli_free_result($res);
+    return $result;
 }
