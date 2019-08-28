@@ -2,18 +2,18 @@
 
 /**
  * Проверяет переданную дату на соответствие формату 'ГГГГ-ММ-ДД'.
- * Примеры использования:
- * is_date_valid('2019-01-01'); // true
- * is_date_valid('2016-02-29'); // true
- * is_date_valid('2019-04-31'); // false
- * is_date_valid('10.10.2010'); // false
+ * Примеры использования:\
+ * is_date_valid('2019-01-01'); // true\
+ * is_date_valid('2016-02-29'); // true\
+ * is_date_valid('2019-04-31'); // false\
+ * is_date_valid('10.10.2010'); // false\
  * is_date_valid('10/10/2010'); // false
  *
  * @param string $date Дата в виде строки
  *
  * @return bool true при совпадении с форматом 'ГГГГ-ММ-ДД', иначе false
  */
-function is_date_valid(string $date): bool
+function isDateValid(string $date): bool
 {
     $format_to_check = 'Y-m-d';
     $dateTimeObj = date_create_from_format($format_to_check, $date);
@@ -23,7 +23,7 @@ function is_date_valid(string $date): bool
 
 /**
  * Возвращает корректную форму множественного числа.
- * **Ограничения: только для целых чисел**
+ * **Ограничения: только для целых чисел**\
  * Пример использования:
  * ```
  * $remaining_minutes = 5;
@@ -44,7 +44,7 @@ function is_date_valid(string $date): bool
  *
  * @return string Рассчитанная форма множественнго числа
  */
-function get_noun_plural_form(int $number, string $one, string $two, string $many): string
+function getNounPluralForm(int $number, string $one, string $two, string $many): string
 {
     $number = (int) $number;
     $mod10 = $number % 10;
@@ -74,7 +74,7 @@ function get_noun_plural_form(int $number, string $one, string $two, string $man
  * @param array $data Ассоциативный массив с данными для шаблона
  * @return string Итоговый HTML
  */
-function include_template(string $name, array $data = []): string
+function includeTemplate(string $name, array $data = []): string
 {
     $name = 'templates/' . $name;
     $result = '';
@@ -154,7 +154,7 @@ function getTimeUntil(string $date): array
  */
 function showError(string $errMessage): void
 {
-    exit(include_template(
+    exit(includeTemplate(
         'error.php',
         ['error' => $errMessage]
     ));

@@ -8,7 +8,7 @@ require_once 'functions/template.php';
 require_once 'functions/db.php';
 
 if (!file_exists('config.php')) {
-    showError('Создайте файл config.php на основе config.sample.php и выполните настройку.');
+    exit('Создайте файл config.php на основе config.sample.php и выполните настройку.');
 }
 $config = require 'config.php';
 
@@ -34,8 +34,8 @@ if (empty($lot)) {
     exit;
 }
 
-$mainContent = include_template('lot-details.php', ['categories' => $categories, 'lot' => $lot]);
-$layoutContent = include_template(
+$mainContent = includeTemplate('lot-details.php', ['categories' => $categories, 'lot' => $lot]);
+$layoutContent = includeTemplate(
     'layout.php',
     [
         'pageTitle' => $lot['name'],
