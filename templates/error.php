@@ -2,9 +2,9 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>Ошибка</title>
-    <link href="../css/normalize.min.css" rel="stylesheet">
-    <link href="../css/style.css" rel="stylesheet">
+    <title><?= $header ?></title>
+    <link href="/css/normalize.min.css" rel="stylesheet">
+    <link href="/css/style.css" rel="stylesheet">
 </head>
 <body>
 
@@ -14,7 +14,7 @@
         <div class="main-header__container container">
             <h1 class="visually-hidden">YetiCave</h1>
             <a class="main-header__logo" href="index.html">
-                <img src="../img/logo.svg" width="160" height="39" alt="Логотип компании YetiCave">
+                <img src="/img/logo.svg" width="160" height="39" alt="Логотип компании YetiCave">
             </a>
             <form class="main-header__search" method="get" action="https://echo.htmlacademy.ru" autocomplete="off">
                 <input type="search" name="search" placeholder="Поиск лота">
@@ -36,7 +36,7 @@
 
     <main>
         <section class="lot-item container">
-            <h2>Ошибка</h2>
+            <h2><?= $header ?></h2>
             <p><?= $error ?></p>
         </section>
     </main>

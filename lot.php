@@ -2,13 +2,13 @@
 require 'bootstrap.php';
 
 if (!isset($_GET['id'])) {
-    header("Location: /pages/404.html");
-    exit;
+    http_response_code(404);
+    showError('404');
 }
 $id = intval($_GET['id']);
 if (strval($id) !== $_GET['id']) {
-    header("Location: /pages/404.html");
-    exit;
+    http_response_code(404);
+    showError('404');
 }
 
 $dbConnection = dbConnect($config['db']);
@@ -19,8 +19,8 @@ $lot = getLotById($dbConnection, $id);
 dbClose($dbConnection);
 
 if (empty($lot)) {
-    header("Location: /pages/404.html");
-    exit;
+    http_response_code(404);
+    showError('404');
 }
 
 $mainContent = includeTemplate('lot-details.php', ['categories' => $categories, 'lot' => $lot]);

@@ -150,13 +150,18 @@ function getTimeUntil(string $date): array
  * **Завершает выполнение скрипта.**
  *
  * @param string $errMessage Выводимое сообщение
+ * @param string $header Заголовок ошибки
  * @return void
  */
-function showError(string $errMessage): void
+function showError(string $errMessage, string $header = 'Ошибка'): void
 {
+    if ($errMessage === '404') {
+        $errMessage = 'Данной страницы не существует на сайте.';
+        $header = '404 Страница не найдена';
+    }
     exit(includeTemplate(
         'error.php',
-        ['error' => $errMessage]
+        ['error' => $errMessage, 'header' => $header]
     ));
 }
 
