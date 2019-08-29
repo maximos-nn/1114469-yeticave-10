@@ -168,11 +168,11 @@ function showError(string $errMessage, string $header = 'Ошибка'): void
 /**
  * Вычисляет минимальную допустимую ставку
  *
- * @param string $price Текущая цена
- * @param string $step Шаг ставки
- * @return string Минимальная ставка
+ * @param int $price Текущая цена
+ * @param int $step Шаг ставки
+ * @return int Минимальная ставка
  */
-function calcNextBid(string $price, string $step): string
+function calcNextBid(int $price, int $step): int
 {
-    return strval(intval($price) + intval($step));
+    return $price + $step;
 }

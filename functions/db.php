@@ -110,17 +110,13 @@ function dbFetchData(mysqli $dbConnection, string $sqlQuery): array
  * @param string[] $dbConfig Массив параметров подключения
  * @return mysqli Объект подключения к БД
  */
-function dbConnect($dbConfig): mysqli
+function dbConnect(array $dbConfig): mysqli
 {
-    if (empty($dbConfig)) {
-        exit('Некорректная конфигурация подключения к БД.');
-    }
-
     $dbConnection = mysqli_connect(
-        $dbConfig['host'],
-        $dbConfig['user'],
-        $dbConfig['password'],
-        $dbConfig['database']
+        $dbConfig['host'] ?? null,
+        $dbConfig['user'] ?? null,
+        $dbConfig['password'] ?? null,
+        $dbConfig['database'] ?? null
     );
 
     if (!$dbConnection) {

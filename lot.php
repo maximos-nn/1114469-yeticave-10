@@ -1,15 +1,11 @@
 <?php
 require 'bootstrap.php';
 
-if (!isset($_GET['id'])) {
+if (!isValidId($_GET['id'] ?? null)) {
     http_response_code(404);
     showError('404');
 }
 $id = intval($_GET['id']);
-if (strval($id) !== $_GET['id']) {
-    http_response_code(404);
-    showError('404');
-}
 
 $dbConnection = dbConnect($config['db']);
 
@@ -18,7 +14,7 @@ $lot = getLotById($dbConnection, $id);
 
 dbClose($dbConnection);
 
-if (empty($lot)) {
+if (!$lot) {
     http_response_code(404);
     showError('404');
 }

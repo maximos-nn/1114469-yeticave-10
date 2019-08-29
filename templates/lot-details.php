@@ -30,13 +30,13 @@
                 <span class="lot-item__cost"><?= formatPrice(clearSpecials($lot['price'])) ?></span>
               </div>
               <div class="lot-item__min-cost">
-                Мин. ставка <span><?= formatPrice(calcNextBid($lot['price'], $lot['step'])) ?></span>
+                Мин. ставка <span><?= formatPrice(strval(calcNextBid(intval($lot['price']), intval($lot['step'])))) ?></span>
               </div>
             </div>
             <form class="lot-item__form" action="https://echo.htmlacademy.ru" method="post" autocomplete="off">
               <p class="lot-item__form-item form__item form__item--invalid">
                 <label for="cost">Ваша ставка</label>
-                <input id="cost" type="text" name="cost" placeholder="<?= formatPrice(calcNextBid($lot['price'], $lot['step'])) ?>">
+                <input id="cost" type="text" name="cost" placeholder="<?= formatPrice(strval(calcNextBid(intval($lot['price']), intval($lot['step'])))) ?>">
                 <span class="form__error">Введите наименование лота</span>
               </p>
               <button type="submit" class="button">Сделать ставку</button>
