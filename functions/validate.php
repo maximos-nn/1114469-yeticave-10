@@ -87,7 +87,8 @@ function isDateValid(string $date): bool
     return $dateTimeObj !== false && array_sum(date_get_last_errors()) === 0;
 }
 
-$validateLotName = function() {
+$validateLotName = function()
+{
     $str = $_POST['lot-name'] ?? '';
     if (!$str) {
         return 'Введите наименование лота';
@@ -96,29 +97,34 @@ $validateLotName = function() {
     return isLengthValid($_POST['lot-name'], 1, 255) ? '' : 'Поле нужно заполнить, и оно не должно превышать 255 символов';
 };
 
-$validateLotComment = function() {
+$validateLotComment = function()
+{
     return isLengthValid($_POST['message'] ?? '', 1, -1) ? '' : 'Напишите описание лота';
 };
 
-$validateLotPrice = function() {
+$validateLotPrice = function()
+{
     if (empty($_POST['lot-rate'])) {
         return 'Введите начальную цену';
     }
     return ($val = getIntValue($_POST, 'lot-rate')) && $val > 0 ? '' : 'Цена должна быть числом больше 0';
 };
 
-$validateBidStep = function() {
+$validateBidStep = function()
+{
     if (empty($_POST['lot-step'])) {
         return 'Введите шаг ставки';
     }
     return ($val = getIntValue($_POST, 'lot-step')) && $val > 0 ? '' : 'Шаг ставки должен быть числом больше 0';
 };
 
-$validateCategory = function() use (&$catIds) {
+$validateCategory = function() use (&$catIds)
+{
     return isInList($catIds, $_POST['category'] ?? '') ? '' : 'Выберите категорию';
 };
 
-$validateLotExpire = function() {
+$validateLotExpire = function()
+{
     if (empty($_POST['lot-date'])) {
         return 'Введите дату завершения торгов';
     }
@@ -128,6 +134,26 @@ $validateLotExpire = function() {
     // Дата окончания торгов включает указанный день?
     // return date_create($_POST['lot-date']) >= date_modify(date_create('today'), '2 day') ? '' : 'Дата должна быть больше текущей';
     return date_create($_POST['lot-date']) >= date_create('tomorrow') ? '' : 'Дата должна быть больше текущей';
+};
+
+$validateImage = function() use(&$fileName)
+{
+    $key = 'lot-img';
+    $error = validateFile($key);
+    if ($error) {
+        return $error;
+    }
+    $types = ['png' => 'image/png', 'jpg' => 'image/jpeg'];
+    $ext = getFileType($key, $types);
+    if (!$ext) {
+        return 'Неверный формат файла. Ожидалось: ' . implode(', ', array_values($types));
+    }
+    $file = moveFile($key, $ext);
+    if (!$file) {
+        return 'Ошибка сохранения файла';
+    }
+    $fileName = $file;
+    return '';
 };
 
 function validateFile(string $key): string
@@ -155,9 +181,8 @@ function validateFile(string $key): string
 
 function getFileType(string $key, array $types): string
 {
-    $finfo = finfo_open(FILEINFO_MIME_TYPE);
     return array_search(
-        finfo_file($finfo, $_FILES[$key]['tmp_name']),
+        mime_content_type($_FILES[$key]['tmp_name']),
         $types,
         true
     );

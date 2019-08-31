@@ -9,32 +9,19 @@ $categories = getCategories($dbConnection);
 $catIds = array_column($categories, 'id');
 
 if (($_SERVER['REQUEST_METHOD'] ?? null) === 'POST') {
+    $fileName = '';
+
     $rules = [
         'category' => $validateCategory,
         'lot-name' => $validateLotName,
         'message' => $validateLotComment,
         'lot-rate' => $validateLotPrice,
         'lot-step' => $validateBidStep,
-        'lot-date' => $validateLotExpire
+        'lot-date' => $validateLotExpire,
+        'lot-img' => $validateImage
     ];
 
     $errors = validateForm($rules);
-
-    $fileName = '';
-    $errors['lot-img'] = validateFile('lot-img');
-    if (!$errors['lot-img']) {
-        $types = ['png' => 'image/png', 'jpg' => 'image/jpeg'];
-        $ext = getFileType('lot-img', $types);
-        if (!$ext) {
-            $errors['lot-img'] = 'Неверный формат файла. Ожидалось: ' . implode(', ', array_values($types));
-        } else {
-            $fileName = moveFile('lot-img', $ext);
-            if (!$fileName) {
-                $errors['lot-img'] = 'Ошибка сохранения файла';
-            }
-        }
-        $errors = array_filter($errors);
-    }
 
     if (!$errors) {
         $lot = [
@@ -48,8 +35,15 @@ if (($_SERVER['REQUEST_METHOD'] ?? null) === 'POST') {
         ];
         $lotId = createLot($dbConnection, $lot);
         dbClose($dbConnection);
+        if (!$lotId) {
+            exit('Не удалось добавить новый лот');
+        }
         header('Location: /lot.php?id=' . $lotId);
         exit;
+    }
+
+    if ($fileName) {
+        unlink($fileName);
     }
 }
 
