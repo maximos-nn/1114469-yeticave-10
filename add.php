@@ -31,7 +31,8 @@ if (($_SERVER['REQUEST_METHOD'] ?? null) === 'POST') {
             $_POST['lot-date'],
             $_POST['lot-step'],
             1,
-            $_POST['category']
+            $_POST['category'],
+            $_POST['message']
         ];
         $lotId = createLot($dbConnection, $lot);
         dbClose($dbConnection);

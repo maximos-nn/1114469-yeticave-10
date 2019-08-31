@@ -181,8 +181,8 @@ function dbFetchStmtData(mysqli $dbConnection, string $sqlQuery, array $data = [
 
 function createLot(mysqli $dbConnection, array $lot): string
 {
-    $sqlQuery = 'INSERT INTO `lots` (`title`, `image_path`, `price`, `expire_date`, `bid_step`, `user_id`, `category_id`)
-    VALUES (?, ?, ?, ?, ?, ?, ?)';
+    $sqlQuery = 'INSERT INTO `lots` (`title`, `image_path`, `price`, `expire_date`, `bid_step`, `user_id`, `category_id`, `description`)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?)';
 
     if (!dbInsertStmtData($dbConnection, $sqlQuery, $lot)) {
         return '';
