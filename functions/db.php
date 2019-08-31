@@ -178,3 +178,21 @@ function dbFetchStmtData(mysqli $dbConnection, string $sqlQuery, array $data = [
     mysqli_free_result($res);
     return $result;
 }
+
+function createLot(mysqli $dbConnection, array $lot): string
+{
+    $sqlQuery = 'INSERT INTO `lots` (`title`, `image_path`, `price`, `expire_date`, `bid_step`, `user_id`, `category_id`)
+    VALUES (?, ?, ?, ?, ?, ?, ?)';
+
+    if (!dbInsertStmtData($dbConnection, $sqlQuery, $lot)) {
+        return '';
+    }
+    return (string) mysqli_insert_id($dbConnection);
+}
+
+function dbInsertStmtData(mysqli $dbConnection, string $sqlQuery, array $data = []): bool
+{
+    $stmt = dbGetPrepareStmt($dbConnection, $sqlQuery, $data);
+    return mysqli_stmt_execute($stmt);
+    mysqli_stmt_close($stmt);
+}
