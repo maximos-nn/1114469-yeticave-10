@@ -193,6 +193,7 @@ function createLot(mysqli $dbConnection, array $lot): string
 function dbInsertStmtData(mysqli $dbConnection, string $sqlQuery, array $data = []): bool
 {
     $stmt = dbGetPrepareStmt($dbConnection, $sqlQuery, $data);
-    return mysqli_stmt_execute($stmt);
+    $res = mysqli_stmt_execute($stmt);
     mysqli_stmt_close($stmt);
+    return $res;
 }
