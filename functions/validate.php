@@ -49,7 +49,7 @@ function validateForm(array $rules): array
 {
     $errors = [];
     foreach ($rules as $key => $rule) {
-        $errors[$key] = $rule();
+        $errors[$key] = $rule($key);
     }
     return array_filter($errors);
 }
@@ -87,58 +87,57 @@ function isDateValid(string $date): bool
     return $dateTimeObj !== false && array_sum(date_get_last_errors()) === 0;
 }
 
-$validateLotName = function()
+$validateLotName = function(string $key)
 {
-    $str = $_POST['lot-name'] ?? '';
+    $str = $_POST[$key] ?? '';
     if (!$str) {
         return 'Введите наименование лота';
     }
     // trim()? И проверка символов?
-    return isLengthValid($_POST['lot-name'], 1, 255) ? '' : 'Поле нужно заполнить, и оно не должно превышать 255 символов';
+    return isLengthValid($_POST[$key], 1, 255) ? '' : 'Поле нужно заполнить, и оно не должно превышать 255 символов';
 };
 
-$validateLotComment = function()
+$validateLotComment = function(string $key)
 {
-    return isLengthValid($_POST['message'] ?? '', 1, -1) ? '' : 'Напишите описание лота';
+    return isLengthValid($_POST[$key] ?? '', 1, -1) ? '' : 'Напишите описание лота';
 };
 
-$validateLotPrice = function()
+$validateLotPrice = function(string $key)
 {
-    if (empty($_POST['lot-rate'])) {
+    if (empty($_POST[$key])) {
         return 'Введите начальную цену';
     }
-    return ($val = getIntValue($_POST, 'lot-rate')) && $val > 0 ? '' : 'Цена должна быть числом больше 0';
+    return ($val = getIntValue($_POST, $key)) && $val > 0 ? '' : 'Цена должна быть числом больше 0';
 };
 
-$validateBidStep = function()
+$validateBidStep = function(string $key)
 {
-    if (empty($_POST['lot-step'])) {
+    if (empty($_POST[$key])) {
         return 'Введите шаг ставки';
     }
-    return ($val = getIntValue($_POST, 'lot-step')) && $val > 0 ? '' : 'Шаг ставки должен быть числом больше 0';
+    return ($val = getIntValue($_POST, $key)) && $val > 0 ? '' : 'Шаг ставки должен быть числом больше 0';
 };
 
-$validateCategory = function() use (&$catIds)
+$validateCategory = function(string $key) use (&$catIds)
 {
-    return isInList($catIds, $_POST['category'] ?? '') ? '' : 'Выберите категорию';
+    return isInList($catIds, $_POST[$key] ?? '') ? '' : 'Выберите категорию';
 };
 
-$validateLotExpire = function()
+$validateLotExpire = function(string $key)
 {
-    if (empty($_POST['lot-date'])) {
+    if (empty($_POST[$key])) {
         return 'Введите дату завершения торгов';
     }
-    if (!isDateValid($_POST['lot-date'])) {
+    if (!isDateValid($_POST[$key])) {
         return 'Дата должна быть в формате "ГГГГ-ММ-ДД"';
     }
     // Дата окончания торгов включает указанный день?
-    // return date_create($_POST['lot-date']) >= date_modify(date_create('today'), '2 day') ? '' : 'Дата должна быть больше текущей';
-    return date_create($_POST['lot-date']) >= date_create('tomorrow') ? '' : 'Дата должна быть больше текущей';
+    // return date_create($_POST[$key]) >= date_modify(date_create('today'), '2 day') ? '' : 'Дата должна быть больше текущей';
+    return date_create($_POST[$key]) >= date_create('tomorrow') ? '' : 'Дата должна быть больше текущей';
 };
 
-$validateImage = function() use(&$fileName)
+$validateImage = function(string $key) use(&$fileName)
 {
-    $key = 'lot-img';
     $error = validateFile($key);
     if ($error) {
         return $error;
