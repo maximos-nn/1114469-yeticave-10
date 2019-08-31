@@ -114,6 +114,10 @@ $validateBidStep = function() {
     return ($val = getIntValue($_POST, 'lot-step')) && $val > 0 ? '' : 'Шаг ставки должен быть числом больше 0';
 };
 
+$validateCategory = function() use (&$catIds) {
+    return isInList($catIds, $_POST['category'] ?? '') ? '' : 'Выберите категорию';
+};
+
 $validateLotExpire = function() {
     if (empty($_POST['lot-date'])) {
         return 'Введите дату завершения торгов';

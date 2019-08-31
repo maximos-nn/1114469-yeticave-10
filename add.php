@@ -10,9 +10,7 @@ $catIds = array_column($categories, 'id');
 
 if (($_SERVER['REQUEST_METHOD'] ?? null) === 'POST') {
     $rules = [
-        'category' => function() use ($catIds) {
-            return isInList($catIds, $_POST['category'] ?? '') ? '' : 'Выберите категорию';
-        },
+        'category' => $validateCategory,
         'lot-name' => $validateLotName,
         'message' => $validateLotComment,
         'lot-rate' => $validateLotPrice,
