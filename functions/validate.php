@@ -27,12 +27,12 @@
  * getIntValue(false); // bool(false)\
  * getIntValue(true); // bool(false)
  *
- * @param string $value Значение для анализа
+ * @param mixed $value Значение для анализа
  * @return int|null Возвращает корректное значение или null
  */
-function getIntValue(string $value): ?int
+function getIntValue($value): ?int
 {
-    if (!$value || !ctype_digit(strval($value)) || $value === true) {
+    if (!$value || $value === true || !ctype_digit($s = strval($value)) || $s !== ltrim($s, '0')) {
         return null;
     }
     return (int)$value;
@@ -116,8 +116,11 @@ function isDateValid(string $date): bool
  */
 $validateLotName = function(string $value)
 {
-    if (!$value) {
+    if ($value === '') {
         return 'Введите наименование лота';
+    }
+    if (!isValidChars($value)) {
+        return 'В строке присутствуют недопустимые символы';
     }
     return isLengthValid($value, 1, 255) ? '' : 'Поле нужно заполнить, и оно не должно превышать 255 символов';
 };
@@ -138,7 +141,7 @@ $validateLotPrice = function(string $value)
     if (!$value) {
         return 'Введите начальную цену';
     }
-    return ($val = getIntValue($value)) && $val > 0 ? '' : 'Цена должна быть числом больше 0';
+    return getIntValue($value) ? '' : 'Цена должна быть числом больше 0';
 };
 
 /**
@@ -149,7 +152,7 @@ $validateBidStep = function(string $value)
     if (!$value) {
         return 'Введите шаг ставки';
     }
-    return ($val = getIntValue($value)) && $val > 0 ? '' : 'Шаг ставки должен быть числом больше 0';
+    return getIntValue($value) ? '' : 'Шаг ставки должен быть числом больше 0';
 };
 
 /**
@@ -265,4 +268,15 @@ function trimItems(array $data): array
         },
         $data
     );
+}
+
+/**
+ * Проверяет строку на наличие только допустимых символов.
+ *
+ * @param string $str Строка для анализа
+ * @return boolean
+ */
+function isValidChars(string $str): bool
+{
+    return preg_match('/^[-а-яёa-z0-9\/ ]+$/iu', $str);
 }
