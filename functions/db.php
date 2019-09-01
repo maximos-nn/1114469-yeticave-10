@@ -184,7 +184,7 @@ function dbFetchStmtData(mysqli $dbConnection, string $sqlQuery, array $data = [
  *
  * @param mysqli $dbConnection Подключение к БД
  * @param array $lot Массив со знечениями полей записи
- * @return string
+ * @return string Возвращает идентификатор новой записи или пустую строку в случае неудачи
  */
 function createLot(mysqli $dbConnection, array $lot): string
 {
