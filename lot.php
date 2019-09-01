@@ -1,11 +1,10 @@
 <?php
 require 'bootstrap.php';
 
-if (!isValidId($_GET['id'] ?? null)) {
+if (!($id = getIntParam($_GET,'id'))) {
     http_response_code(404);
     showError('404');
 }
-$id = intval($_GET['id']);
 
 $dbConnection = dbConnect($config['db']);
 
