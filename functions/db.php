@@ -158,7 +158,7 @@ function getLotById(mysqli $dbConnection, int $id): array
 }
 
 /**
- * Выполняет подготавливаемый запрос к БД и возвращает результат в виде ассоциативного массива.
+ * Выполняет подготавливаемый запрос на выборку и возвращает результат в виде ассоциативного массива.
  *
  * @param mysqli $dbConnection Подключение к БД
  * @param string $sqlQuery Шаблон запроса с псевдопеременными
@@ -179,18 +179,33 @@ function dbFetchStmtData(mysqli $dbConnection, string $sqlQuery, array $data = [
     return $result;
 }
 
+/**
+ * Добавляет новый лот в БД.
+ *
+ * @param mysqli $dbConnection Подключение к БД
+ * @param array $lot Массив со знечениями полей записи
+ * @return string
+ */
 function createLot(mysqli $dbConnection, array $lot): string
 {
     $sqlQuery = 'INSERT INTO `lots` (`title`, `image_path`, `price`, `expire_date`, `bid_step`, `user_id`, `category_id`, `description`)
     VALUES (?, ?, ?, ?, ?, ?, ?, ?)';
 
-    if (!dbInsertStmtData($dbConnection, $sqlQuery, $lot)) {
+    if (!dbManipulateStmtData($dbConnection, $sqlQuery, $lot)) {
         return '';
     }
     return (string) mysqli_insert_id($dbConnection);
 }
 
-function dbInsertStmtData(mysqli $dbConnection, string $sqlQuery, array $data = []): bool
+/**
+ * Выполняет вставку, изменение или удаление данных с помощью подготавливаемого запроса.
+ *
+ * @param mysqli $dbConnection Подключение к БД
+ * @param string $sqlQuery Шаблон запроса с псевдопеременными
+ * @param array $data Данные для псевдопеременных
+ * @return boolean
+ */
+function dbManipulateStmtData(mysqli $dbConnection, string $sqlQuery, array $data = []): bool
 {
     $stmt = dbGetPrepareStmt($dbConnection, $sqlQuery, $data);
     $res = mysqli_stmt_execute($stmt);

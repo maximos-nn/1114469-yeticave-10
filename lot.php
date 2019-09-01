@@ -1,7 +1,7 @@
 <?php
 require 'bootstrap.php';
 
-if (!($id = getIntValue($_GET,'id'))) {
+if (!($id = getIntParam($_GET,'id'))) {
     http_response_code(404);
     showError('404');
 }

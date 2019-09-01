@@ -17,22 +17,26 @@ if (($_SERVER['REQUEST_METHOD'] ?? null) === 'POST') {
         'message' => $validateLotComment,
         'lot-rate' => $validateLotPrice,
         'lot-step' => $validateBidStep,
-        'lot-date' => $validateLotExpire,
-        'lot-img' => $validateImage
+        'lot-date' => $validateLotExpire
     ];
 
-    $errors = validateForm($rules);
+    $formData = trimItems($_POST);
+    $errors = validateForm($rules, $formData);
+    $imageError = $validateImage($_FILES['lot-img'] ?? []);
+    if ($imageError) {
+        $errors = array_merge($errors, ['lot-img' => $imageError]);
+    }
 
     if (!$errors) {
         $lot = [
-            $_POST['lot-name'],
+            $formData['lot-name'],
             $fileName,
-            $_POST['lot-rate'],
-            $_POST['lot-date'],
-            $_POST['lot-step'],
+            $formData['lot-rate'],
+            $formData['lot-date'],
+            $formData['lot-step'],
             1,
-            $_POST['category'],
-            $_POST['message']
+            $formData['category'],
+            $formData['message']
         ];
         $lotId = createLot($dbConnection, $lot);
         dbClose($dbConnection);
@@ -52,7 +56,7 @@ dbClose($dbConnection);
 
 $mainContent = includeTemplate(
     'add-lot.php',
-    ['categories' => $categories, 'errors' => $errors]
+    ['categories' => $categories, 'errors' => $errors, 'form' => $formData]
 );
 $layoutContent = includeTemplate(
     'layout.php',

@@ -13,7 +13,7 @@
     <div class="form__container-two">
       <div class="form__item <?= isset($errors['lot-name']) ? 'form__item--invalid' : '' ?>">
         <label for="lot-name">Наименование <sup>*</sup></label>
-        <input id="lot-name" type="text" name="lot-name" placeholder="Введите наименование лота" value="<?= clearSpecials($_POST['lot-name'] ?? '') ?>">
+        <input id="lot-name" type="text" name="lot-name" placeholder="Введите наименование лота" value="<?= clearSpecials($form['lot-name'] ?? '') ?>">
         <span class="form__error"><?= isset($errors['lot-name']) ? $errors['lot-name'] : '' ?></span>
       </div>
       <div class="form__item <?= isset($errors['category']) ? 'form__item--invalid' : '' ?>">
@@ -21,7 +21,7 @@
         <select id="category" name="category">
           <option>Выберите категорию</option>
           <?php foreach ($categories as $category): ?>
-            <option value="<?= $category['id'] ?>" <?= $category['id'] === ($_POST['category'] ?? '') ? 'selected' : '' ?>>
+            <option value="<?= $category['id'] ?>" <?= $category['id'] === ($form['category'] ?? '') ? 'selected' : '' ?>>
                 <?= clearSpecials($category['name']) ?>
             </option>
           <?php endforeach; ?>
@@ -31,7 +31,7 @@
     </div>
     <div class="form__item form__item--wide <?= isset($errors['message']) ? 'form__item--invalid' : '' ?>">
       <label for="message">Описание <sup>*</sup></label>
-      <textarea id="message" name="message" placeholder="Напишите описание лота"><?= clearSpecials($_POST['message'] ?? '') ?></textarea>
+      <textarea id="message" name="message" placeholder="Напишите описание лота"><?= clearSpecials($form['message'] ?? '') ?></textarea>
       <span class="form__error"><?= isset($errors['message']) ? $errors['message'] : '' ?></span>
     </div>
     <div class="form__item form__item--file <?= isset($errors['lot-img']) ? 'form__item--invalid' : '' ?>">
@@ -47,17 +47,17 @@
     <div class="form__container-three">
       <div class="form__item form__item--small <?= isset($errors['lot-rate']) ? 'form__item--invalid' : '' ?>">
         <label for="lot-rate">Начальная цена <sup>*</sup></label>
-        <input id="lot-rate" type="text" name="lot-rate" placeholder="0" value="<?= clearSpecials($_POST['lot-rate'] ?? '') ?>">
+        <input id="lot-rate" type="text" name="lot-rate" placeholder="0" value="<?= clearSpecials($form['lot-rate'] ?? '') ?>">
         <span class="form__error"><?= isset($errors['lot-rate']) ? $errors['lot-rate'] : '' ?></span>
       </div>
       <div class="form__item form__item--small <?= isset($errors['lot-step']) ? 'form__item--invalid' : '' ?>">
         <label for="lot-step">Шаг ставки <sup>*</sup></label>
-        <input id="lot-step" type="text" name="lot-step" placeholder="0" value="<?= clearSpecials($_POST['lot-step'] ?? '') ?>">
+        <input id="lot-step" type="text" name="lot-step" placeholder="0" value="<?= clearSpecials($form['lot-step'] ?? '') ?>">
         <span class="form__error"><?= isset($errors['lot-step']) ? $errors['lot-step'] : '' ?></span>
       </div>
       <div class="form__item <?= isset($errors['lot-date']) ? 'form__item--invalid' : '' ?>">
         <label for="lot-date">Дата окончания торгов <sup>*</sup></label>
-        <input class="form__input-date" id="lot-date" type="text" name="lot-date" placeholder="Введите дату в формате ГГГГ-ММ-ДД" value="<?= clearSpecials($_POST['lot-date'] ?? '') ?>">
+        <input class="form__input-date" id="lot-date" type="text" name="lot-date" placeholder="Введите дату в формате ГГГГ-ММ-ДД" value="<?= clearSpecials($form['lot-date'] ?? '') ?>">
         <span class="form__error"><?= isset($errors['lot-date']) ? $errors['lot-date'] : '' ?></span>
       </div>
     </div>
