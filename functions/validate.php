@@ -78,16 +78,22 @@ function validateForm(array $rules, array $data): array
  * @param integer $max Максимальная длина при $max >= 0, или отсутствие ограничения при $max < 0
  * @return boolean
  */
-function isLengthValid(string $str, int $min = 1, int $max = -1): bool
+function isLengthValid(string $str, int $min = null, int $max = null): bool
 {
-    if ($min < 0) {
-        $min = 0;
+    if ($min < 0 || $max < 0 || $min > $max) {
+        exit('isLengthValid: Недопустимые параметры.');
     }
-    if ($max >= 0 && $max < $min) {
-        $max = -1;
-    }
+
     $len = mb_strlen($str, 'UTF-8');
-    return $len >= $min and $max < 0 || $len <= $max;
+
+    if ($min && $len < $min) {
+        return false;
+    }
+
+    if ($max && $len > $max) {
+        return false;
+    }
+    return true;
 }
 
 /**
