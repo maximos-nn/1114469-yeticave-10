@@ -182,9 +182,7 @@ $validateLotExpire = function(string $value)
     if (!isDateValid($value)) {
         return 'Дата должна быть в формате "ГГГГ-ММ-ДД"';
     }
-    // Дата окончания торгов включает указанный день?
-    // return date_create($value) >= date_modify(date_create('today'), '2 day') ? '' : 'Дата должна быть больше текущей';
-    return date_create($value) >= date_create('tomorrow') ? '' : 'Дата должна быть больше текущей';
+    return date_create($value) > date_create('tomorrow') ? '' : 'Дата должна быть больше завтрашней';
 };
 
 /**
