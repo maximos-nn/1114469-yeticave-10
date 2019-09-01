@@ -62,7 +62,9 @@ function validateForm(array $rules, array $data): array
 {
     $errors = [];
     foreach ($rules as $key => $rule) {
-        $errors[$key] = $rule($data[$key] ?? '');
+        if (is_callable($rule)) {
+            $errors[$key] = $rule($data[$key] ?? '');
+        }
     }
     return array_filter($errors);
 }
@@ -80,7 +82,7 @@ function validateForm(array $rules, array $data): array
  */
 function isLengthValid(string $str, int $min = null, int $max = null): bool
 {
-    if ($min < 0 || $max < 0 || $min > $max) {
+    if ($min < 0 || $max < 0 || $max && $min > $max) {
         exit('isLengthValid: Недопустимые параметры.');
     }
 
@@ -125,7 +127,7 @@ $validateLotName = function(string $value)
     if ($value === '') {
         return 'Введите наименование лота';
     }
-    if (!isValidChars($value)) {
+    if (!preg_match('/^[-а-яёa-z0-9\/ ]+$/iu', $value)) {
         return 'В строке присутствуют недопустимые символы';
     }
     return isLengthValid($value, 1, 255) ? '' : 'Поле нужно заполнить, и оно не должно превышать 255 символов';
@@ -136,7 +138,7 @@ $validateLotName = function(string $value)
  */
 $validateLotComment = function(string $value)
 {
-    return isLengthValid($value) ? '' : 'Напишите описание лота';
+    return isLengthValid($value, 1) ? '' : 'Напишите описание лота';
 };
 
 /**
@@ -274,15 +276,4 @@ function trimItems(array $data): array
         },
         $data
     );
-}
-
-/**
- * Проверяет строку на наличие только допустимых символов.
- *
- * @param string $str Строка для анализа
- * @return boolean
- */
-function isValidChars(string $str): bool
-{
-    return preg_match('/^[-а-яёa-z0-9\/ ]+$/iu', $str);
 }
