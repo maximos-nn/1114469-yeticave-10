@@ -2,13 +2,14 @@
 require 'bootstrap.php';
 
 $errors = [];
+$formData = [];
 
 $dbConnection = dbConnect($config['db']);
 $categories = getCategories($dbConnection);
 
-$catIds = array_column($categories, 'id');
 
 if (($_SERVER['REQUEST_METHOD'] ?? null) === 'POST') {
+    $catIds = array_column($categories, 'id');
     $fileName = '';
 
     $rules = [
