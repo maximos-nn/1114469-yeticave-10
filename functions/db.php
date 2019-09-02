@@ -221,3 +221,38 @@ function dbManipulateStmtData(mysqli $dbConnection, string $sqlQuery, array $dat
     mysqli_stmt_close($stmt);
     return $res;
 }
+
+/**
+ * Добавляет нового пользователя.
+ * Ожидаемая последовательность полей:
+ * - email
+ * - имя
+ * - хэш пароля
+ * - контакты
+ *
+ * @param mysqli $dbConnection Подключение к БД
+ * @param array $user Массив со знечениями полей записи
+ * @return string Возвращает идентификатор новой записи или пустую строку в случае неудачи
+ */
+function createUser(mysqli $dbConnection, array $user): string
+{
+    $sqlQuery = 'INSERT INTO `users` (`email`, `name`, `password`, `contact`) VALUES (?, ?, ?, ?)';
+
+    if (!dbManipulateStmtData($dbConnection, $sqlQuery, $user)) {
+        return '';
+    }
+    return (string) mysqli_insert_id($dbConnection);
+}
+
+/**
+ * Проверяет наличие пользователя с указанным адресом электронной почты.
+ *
+ * @param mysqli $dbConnection Подключение к БД
+ * @param string $email email для проверки
+ * @return boolean
+ */
+function isEmailExists(mysqli $dbConnection, string $email): bool
+{
+    $sqlQuery = 'SELECT 1 FROM `users` WHERE `email`=?';
+    return (bool)dbFetchStmtData($dbConnection, $sqlQuery, [$email]);
+}

@@ -275,3 +275,46 @@ function trimItems(array $data): array
         $data
     );
 }
+
+/**
+ * Правило для проверки контактов аккаунта
+ */
+$validateAuthContacts = function(string $value)
+{
+    return isLengthValid($value, 1) ? '' : 'Напишите как с вами связаться';
+};
+
+/**
+ * Правило для проверки имени пользователя
+ */
+$validateAuthName = function(string $value)
+{
+    if ($value === '') {
+        return 'Введите имя';
+    }
+    // Проверять ли набор символов имени?
+    return isLengthValid($value, 1, 255) ? '' : 'Поле нужно заполнить, и оно не должно превышать 255 символов';
+};
+
+/**
+ * Правило для проверки пароля
+ */
+$validateAuthPass = function(string $value)
+{
+    if ($value === '') {
+        return 'Введите пароль';
+    }
+    // Проверять ли сложность пароля?
+    return isLengthValid($value, 1, 255) ? '' : 'Поле нужно заполнить, и оно не должно превышать 255 символов';
+};
+
+/**
+ * Правило для проверки email
+ */
+$validateAuthEmail = function(string $value)
+{
+    if ($value === '') {
+        return 'Введите e-mail';
+    }
+    return filter_var($value, FILTER_VALIDATE_EMAIL) ? '' : 'Некорректный адрес электронной почты';
+};
