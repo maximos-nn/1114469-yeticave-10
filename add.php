@@ -55,9 +55,10 @@ if (($_SERVER['REQUEST_METHOD'] ?? null) === 'POST') {
 
 dbClose($dbConnection);
 
+$navigation = includeTemplate('navigation.php', ['categories' => $categories]);
 $mainContent = includeTemplate(
     'add-lot.php',
-    ['categories' => $categories, 'errors' => $errors, 'form' => $formData]
+    ['navigation' => $navigation, 'errors' => $errors, 'form' => $formData]
 );
 $layoutContent = includeTemplate(
     'layout.php',
@@ -65,7 +66,7 @@ $layoutContent = includeTemplate(
         'pageTitle' => 'Добавление лота',
         'is_auth' => $is_auth,
         'user_name' => $user_name,
-        'categories' => $categories,
+        'navigation' => $navigation,
         'mainContent' => $mainContent
     ]
 );

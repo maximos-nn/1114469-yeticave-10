@@ -8,6 +8,7 @@ $lots = getActiveLots($dbConnection);
 
 dbClose($dbConnection);
 
+$navigation = includeTemplate('navigation.php', ['categories' => $categories]);
 $mainContent = includeTemplate('main.php', ['categories' => $categories, 'lots' => $lots]);
 $layoutContent = includeTemplate(
     'layout.php',
@@ -15,7 +16,7 @@ $layoutContent = includeTemplate(
         'pageTitle' => 'Главная',
         'is_auth' => $is_auth,
         'user_name' => $user_name,
-        'categories' => $categories,
+        'navigation' => $navigation,
         'mainContent' => $mainContent
     ]
 );
