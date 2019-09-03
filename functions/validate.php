@@ -32,7 +32,7 @@
  */
 function getIntValue($value): ?int
 {
-    if (!$value || $value === true || !ctype_digit($s = strval($value)) || $s !== ltrim($s, '0')) {
+    if (!$value || $value === true || !ctype_digit($strval = strval($value)) || $strval !== ltrim($strval, '0')) {
         return null;
     }
     return (int)$value;
@@ -71,13 +71,10 @@ function validateForm(array $rules, array $data): array
 
 /**
  * Проверяет вхождение длины строки в указанный диапазон.
- * Отсутсвие ограничения длины сверху обозначается отрицательным значением $max.
- * Бессмысленные комбинации $min и $max игнорируются.
- * По умолчанию считается, что строка должна быть, т.е. $min >= 1.
  *
  * @param string $str Строка
- * @param integer $min Минимальная длина ($min >= 0)
- * @param integer $max Максимальная длина при $max >= 0, или отсутствие ограничения при $max < 0
+ * @param integer $min Минимальная длина
+ * @param integer $max Максимальная длина
  * @return boolean
  */
 function isLengthValid(string $str, int $min = null, int $max = null): bool
@@ -231,15 +228,19 @@ function validateFileError(int $error): string
 {
     switch ($error) {
         case UPLOAD_ERR_OK:
-            return '';
+            $result = '';
+            break;
         case UPLOAD_ERR_NO_FILE:
-            return 'Файл не был отправлен';
+            $result = 'Файл не был отправлен';
+            break;
         case UPLOAD_ERR_INI_SIZE:
         case UPLOAD_ERR_FORM_SIZE:
-            return 'Превышен допустимый размер файла';
+            $result = 'Превышен допустимый размер файла';
+            break;
         default:
-            return 'Неизвестная ошибка передачи файла';
+            $result = 'Неизвестная ошибка передачи файла';
     }
+    return $result;
 }
 
 /**
@@ -305,7 +306,7 @@ $validateAuthPass = function(string $value)
         return 'Введите пароль';
     }
     // Проверять ли сложность пароля?
-    return isLengthValid($value, 1, 255) ? '' : 'Поле нужно заполнить, и оно не должно превышать 255 символов';
+    return isLengthValid($value, 8, 255) ? '' : 'Поле нужно заполнить, и оно не должно превышать 255 символов';
 };
 
 /**
