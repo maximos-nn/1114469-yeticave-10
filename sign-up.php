@@ -32,7 +32,7 @@ if (($_SERVER['REQUEST_METHOD'] ?? null) === 'POST') {
         if (!$userId) {
             exit('Не удалось добавить пользователя');
         }
-        header('Location: /pages/login.html');
+        header('Location: sign-in.php');
         exit;
     }
 }

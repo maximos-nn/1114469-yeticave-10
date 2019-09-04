@@ -1,7 +1,7 @@
 <?php
-$is_auth = rand(0, 1);
-
-$user_name = 'maximos';
+session_start();
+$is_auth = $_SESSION['user'] ?? null;
+$user_name = $_SESSION['user']['name'] ?? '';
 
 date_default_timezone_set('Europe/Moscow');
 require 'functions/template.php';

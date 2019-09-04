@@ -266,6 +266,6 @@ function isEmailExists(mysqli $dbConnection, string $email): bool
  */
 function getUserId(mysqli $dbConnection, string $email): array
 {
-    $sqlQuery = 'SELECT id, `name`, `password` FROM users WHERE email=?';
+    $sqlQuery = 'SELECT id, `name`, avatar_path, `password` FROM users WHERE email=?';
     return dbFetchStmtData($dbConnection, $sqlQuery, [$email])[0] ?? [];
 }
