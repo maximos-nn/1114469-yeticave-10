@@ -32,7 +32,7 @@
             <?php else: ?>
                 <ul class="user-menu__list">
                     <li class="user-menu__item">
-                        <a href="#">Регистрация</a>
+                        <a href="sign-up.php">Регистрация</a>
                     </li>
                     <li class="user-menu__item">
                         <a href="#">Вход</a>
@@ -47,15 +47,7 @@
 </div>
 
 <footer class="main-footer">
-    <nav class="nav">
-        <ul class="nav__list container">
-            <?php foreach ($categories as $category): ?>
-                <li class="nav__item">
-                    <a href="pages/all-lots.html"><?= clearSpecials($category['name']) ?></a>
-                </li>
-            <?php endforeach; ?>
-        </ul>
-    </nav>
+    <?= $navigation ?>
     <div class="main-footer__bottom container">
         <div class="main-footer__copyright">
             <p>© 2019, YetiCave</p>

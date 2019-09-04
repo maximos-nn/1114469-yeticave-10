@@ -18,14 +18,15 @@ if (!$lot) {
     showError('404');
 }
 
-$mainContent = includeTemplate('lot-details.php', ['categories' => $categories, 'lot' => $lot]);
+$navigation = includeTemplate('navigation.php', ['categories' => $categories]);
+$mainContent = includeTemplate('lot-details.php', ['navigation' => $navigation, 'lot' => $lot]);
 $layoutContent = includeTemplate(
     'layout.php',
     [
         'pageTitle' => $lot['name'],
         'is_auth' => $is_auth,
         'user_name' => $user_name,
-        'categories' => $categories,
+        'navigation' => $navigation,
         'mainContent' => $mainContent
     ]
 );
