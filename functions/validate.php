@@ -315,7 +315,7 @@ $validateAuthPass = function(string $value)
     if ($value === '') {
         return 'Введите пароль';
     }
-    return isLengthValid($value, 8, 255) ? '' : 'Поле не должно быть длиннее 255 символов';
+    return isLengthValid($value, 8, 255) ? '' : 'Поле должно быть от 8 до 255 символов';
 };
 
 /**
