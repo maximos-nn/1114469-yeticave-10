@@ -256,3 +256,16 @@ function isEmailExists(mysqli $dbConnection, string $email): bool
     $sqlQuery = 'SELECT 1 FROM `users` WHERE `email`=?';
     return (bool)dbFetchStmtData($dbConnection, $sqlQuery, [$email]);
 }
+
+/**
+ * Запрашивает идентификационную информацию о пользователе.
+ *
+ * @param mysqli $dbConnection Подключение к БД
+ * @param string $email Email пользователя
+ * @return array Запись в виде ассоциативного массива
+ */
+function getUserId(mysqli $dbConnection, string $email): array
+{
+    $sqlQuery = 'SELECT id, `name`, `password` FROM users WHERE email=?';
+    return dbFetchStmtData($dbConnection, $sqlQuery, [$email])[0] ?? [];
+}
