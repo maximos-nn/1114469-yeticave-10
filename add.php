@@ -44,7 +44,7 @@ if (($_SERVER['REQUEST_METHOD'] ?? null) === 'POST') {
         if (!$lotId) {
             exit('Не удалось добавить новый лот');
         }
-        header('Location: /lot.php?id=' . $lotId);
+        header('Location: /lot.php?id=' . (string)$lotId);
         exit;
     }
 

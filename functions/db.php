@@ -193,9 +193,9 @@ function dbFetchStmtData(mysqli $dbConnection, string $sqlQuery, array $data = [
  *
  * @param mysqli $dbConnection Подключение к БД
  * @param array $lot Массив со знечениями полей записи
- * @return string Возвращает идентификатор новой записи или пустую строку в случае неудачи
+ * @return int|null Возвращает идентификатор новой записи или null в случае неудачи
  */
-function createLot(mysqli $dbConnection, array $lot): string
+function createLot(mysqli $dbConnection, array $lot): ?int
 {
     $sqlQuery = 'INSERT INTO `lots` (`title`, `image_path`, `price`, `expire_date`, `bid_step`, `user_id`, `category_id`, `description`)
     VALUES (?, ?, ?, ?, ?, ?, ?, ?)';
@@ -203,7 +203,7 @@ function createLot(mysqli $dbConnection, array $lot): string
     if (!dbManipulateStmtData($dbConnection, $sqlQuery, $lot)) {
         return '';
     }
-    return (string) mysqli_insert_id($dbConnection);
+    return mysqli_insert_id($dbConnection);
 }
 
 /**
@@ -232,16 +232,16 @@ function dbManipulateStmtData(mysqli $dbConnection, string $sqlQuery, array $dat
  *
  * @param mysqli $dbConnection Подключение к БД
  * @param array $user Массив со знечениями полей записи
- * @return string Возвращает идентификатор новой записи или пустую строку в случае неудачи
+ * @return int|null Возвращает идентификатор новой записи или null в случае неудачи
  */
-function createUser(mysqli $dbConnection, array $user): string
+function createUser(mysqli $dbConnection, array $user): ?int
 {
     $sqlQuery = 'INSERT INTO `users` (`email`, `name`, `password`, `contact`) VALUES (?, ?, ?, ?)';
 
     if (!dbManipulateStmtData($dbConnection, $sqlQuery, $user)) {
         return '';
     }
-    return (string) mysqli_insert_id($dbConnection);
+    return mysqli_insert_id($dbConnection);
 }
 
 /**

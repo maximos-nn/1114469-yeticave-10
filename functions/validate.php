@@ -1,38 +1,17 @@
 <?php
 
 /**
- * Проверяет, является ли переданное значение корректным целым числом.
+ * Проверяет, является ли переданное значение корректным натуральным числом.
  * Для отрицательных и некорректных значений вернет null.
  * Но нас это устраивает, т.к. в схеме БД идентификаторы объявлены
- * как UNSIGNED INT, и все числовые поля являются натуральными.\
- * getIntValue(23); // bool(true)\
- * getIntValue('23'); // bool(true)\
- * getIntValue('2.3'); // bool(false)\
- * getIntValue('2e3'); // bool(false)\
- * getIntValue('-23'); // bool(false)\
- * getIntValue(-23); // bool(false)\
- * getIntValue(0); // bool(true)\
- * getIntValue(0.0); // bool(true)\
- * getIntValue('0.0'); // bool(false)\
- * getIntValue('-0.0'); // bool(false)\
- * getIntValue(-0.0); // bool(false)\
- * getIntValue(''); // bool(false)\
- * getIntValue(null); // bool(false)\
- * getIntValue('null'); // bool(false)\
- * getIntValue('test'); // bool(false)\
- * getIntValue('test3'); // bool(false)\
- * getIntValue('2test3'); // bool(false)\
- * getIntValue('true'); // bool(false)\
- * getIntValue('false'); // bool(false)\
- * getIntValue(false); // bool(false)\
- * getIntValue(true); // bool(false)
+ * как UNSIGNED INT, и все числовые поля являются натуральными.
  *
  * @param mixed $value Значение для анализа
  * @return int|null Возвращает корректное значение или null
  */
 function getIntValue($value): ?int
 {
-    if (!$value || $value === true || !ctype_digit($strval = strval($value)) || $strval !== ltrim($strval, '0')) {
+    if (!preg_match('/^[1-9][0-9]*$/u', strval($value))) {
         return null;
     }
     return (int)$value;
@@ -118,6 +97,9 @@ function isDateValid(string $date): bool
 
 /**
  * Правило для проверки названия лота
+ *
+ * @param string $value Значение для проверки
+ * @return string Сообщение об ошибке или пустая строка при корректном значении
  */
 $validateLotName = function(string $value)
 {
@@ -132,6 +114,9 @@ $validateLotName = function(string $value)
 
 /**
  * Правило для проверки описания лота
+ *
+ * @param string $value Значение для проверки
+ * @return string Сообщение об ошибке или пустая строка при корректном значении
  */
 $validateLotComment = function(string $value)
 {
@@ -140,6 +125,9 @@ $validateLotComment = function(string $value)
 
 /**
  * Правило для проверки цены лота
+ *
+ * @param string $value Значение для проверки
+ * @return string Сообщение об ошибке или пустая строка при корректном значении
  */
 $validateLotPrice = function(string $value)
 {
@@ -151,6 +139,9 @@ $validateLotPrice = function(string $value)
 
 /**
  * Правило для проверки шага ставки
+ *
+ * @param string $value Значение для проверки
+ * @return string Сообщение об ошибке или пустая строка при корректном значении
  */
 $validateBidStep = function(string $value)
 {
@@ -162,6 +153,10 @@ $validateBidStep = function(string $value)
 
 /**
  * Правило для проверки категории лота
+ *
+ * @param string $value Значение для проверки
+ * @param array &$catIds Список допустимых вариантов категории
+ * @return string Сообщение об ошибке или пустая строка при корректном значении
  */
 $validateCategory = function(string $value) use (&$catIds)
 {
@@ -170,6 +165,9 @@ $validateCategory = function(string $value) use (&$catIds)
 
 /**
  * Правило для проверки даты завершения торгов
+ *
+ * @param string $value Значение для проверки
+ * @return string Сообщение об ошибке или пустая строка при корректном значении
  */
 $validateLotExpire = function(string $value)
 {
@@ -184,6 +182,10 @@ $validateLotExpire = function(string $value)
 
 /**
  * Правило для проверки файла изображения лота
+ *
+ * @param array $data Данные о загруженном файле
+ * @param string &$fileName Путь и имя корректного файла
+ * @return string Сообщение об ошибке или пустая строка при корректном значении
  */
 $validateImage = function(array $data) use(&$fileName)
 {
@@ -279,6 +281,9 @@ function trimItems(array $data): array
 
 /**
  * Правило для проверки контактов аккаунта
+ *
+ * @param string $value Значение для проверки
+ * @return string Сообщение об ошибке или пустая строка при корректном значении
  */
 $validateAuthContacts = function(string $value)
 {
@@ -287,35 +292,45 @@ $validateAuthContacts = function(string $value)
 
 /**
  * Правило для проверки имени пользователя
+ *
+ * @param string $value Значение для проверки
+ * @return string Сообщение об ошибке или пустая строка при корректном значении
  */
 $validateAuthName = function(string $value)
 {
     if ($value === '') {
         return 'Введите имя';
     }
-    // Проверять ли набор символов имени?
-    return isLengthValid($value, 1, 255) ? '' : 'Поле нужно заполнить, и оно не должно превышать 255 символов';
+    return isLengthValid($value, 1, 255) ? '' : 'Поле не должно быть длиннее 255 символов';
 };
 
 /**
  * Правило для проверки пароля
+ *
+ * @param string $value Значение для проверки
+ * @return string Сообщение об ошибке или пустая строка при корректном значении
  */
 $validateAuthPass = function(string $value)
 {
     if ($value === '') {
         return 'Введите пароль';
     }
-    // Проверять ли сложность пароля?
-    return isLengthValid($value, 8, 255) ? '' : 'Поле нужно заполнить, и оно не должно превышать 255 символов';
+    return isLengthValid($value, 8, 255) ? '' : 'Поле не должно быть длиннее 255 символов';
 };
 
 /**
  * Правило для проверки email
+ *
+ * @param string $value Значение для проверки
+ * @return string Сообщение об ошибке или пустая строка при корректном значении
  */
 $validateAuthEmail = function(string $value)
 {
     if ($value === '') {
         return 'Введите e-mail';
+    }
+    if (!isLengthValid($value, 1, 255)) {
+        return 'Поле не должно быть длиннее 255 символов';
     }
     return filter_var($value, FILTER_VALIDATE_EMAIL) ? '' : 'Некорректный адрес электронной почты';
 };
