@@ -1,6 +1,11 @@
 <?php
 require 'bootstrap.php';
 
+if ($isAuth) {
+    header('Location: /');
+    exit;
+}
+
 $errors = [];
 $formData = [];
 
@@ -26,9 +31,11 @@ if (($_SERVER['REQUEST_METHOD'] ?? null) === 'POST') {
 
         if ($pass) {
             dbClose($dbConnection);
-            // session_start();
             unset($userId['password']);
-            $_SESSION['user'] = $userId;
+            if (session_status() === PHP_SESSION_NONE && session_start()) {
+                $_SESSION['user'] = $userId;
+                session_write_close();
+            }
             header('Location: /');
             exit;
         }
@@ -49,8 +56,8 @@ $layoutContent = includeTemplate(
     'layout.php',
     [
         'pageTitle' => 'Вход',
-        'is_auth' => $is_auth,
-        'user_name' => $user_name,
+        'isAuth' => $isAuth,
+        'userName' => $userName,
         'navigation' => $navigation,
         'mainContent' => $mainContent
     ]

@@ -49,8 +49,8 @@ $layoutContent = includeTemplate(
     'layout.php',
     [
         'pageTitle' => 'Регистрация',
-        'is_auth' => $is_auth,
-        'user_name' => $user_name,
+        'isAuth' => $isAuth,
+        'userName' => $userName,
         'navigation' => $navigation,
         'mainContent' => $mainContent
     ]
