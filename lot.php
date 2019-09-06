@@ -24,15 +24,15 @@ $mainContent = includeTemplate(
     [
         'navigation' => $navigation,
         'lot' => $lot,
-        'isAuth' => $isAuth
+        'isAuth' => (bool)$sessUser
     ]
 );
 $layoutContent = includeTemplate(
     'layout.php',
     [
         'pageTitle' => $lot['name'],
-        'isAuth' => $isAuth,
-        'userName' => $userName,
+        'isAuth' => (bool)$sessUser,
+        'userName' => $sessUser['name'] ?? '',
         'navigation' => $navigation,
         'mainContent' => $mainContent
     ]

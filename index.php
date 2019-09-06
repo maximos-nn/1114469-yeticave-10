@@ -14,8 +14,8 @@ $layoutContent = includeTemplate(
     'layout.php',
     [
         'pageTitle' => 'Главная',
-        'isAuth' => $isAuth,
-        'userName' => $userName,
+        'isAuth' => (bool)$sessUser,
+        'userName' => $sessUser['name'] ?? '',
         'navigation' => $navigation,
         'mainContent' => $mainContent
     ]

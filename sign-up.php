@@ -1,6 +1,11 @@
 <?php
 require 'bootstrap.php';
 
+if ($sessUser) {
+    header('Location: /');
+    exit;
+}
+
 $errors = [];
 $formData = [];
 
@@ -49,8 +54,8 @@ $layoutContent = includeTemplate(
     'layout.php',
     [
         'pageTitle' => 'Регистрация',
-        'isAuth' => $isAuth,
-        'userName' => $userName,
+        'isAuth' => (bool)$sessUser,
+        'userName' => $sessUser['name'] ?? '',
         'navigation' => $navigation,
         'mainContent' => $mainContent
     ]

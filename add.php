@@ -1,7 +1,7 @@
 <?php
 require 'bootstrap.php';
 
-if (!$isAuth) {
+if (!$sessUser) {
     http_response_code(403);
     showError('Доступ только для зарегистрированных пользователей', '403');
 }
@@ -72,8 +72,8 @@ $layoutContent = includeTemplate(
     'layout.php',
     [
         'pageTitle' => 'Добавление лота',
-        'isAuth' => $isAuth,
-        'userName' => $userName,
+        'isAuth' => (bool)$sessUser,
+        'userName' => $sessUser['name'] ?? '',
         'navigation' => $navigation,
         'mainContent' => $mainContent
     ]
