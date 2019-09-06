@@ -1,7 +1,7 @@
 <?php
 require 'bootstrap.php';
 
-if ($isAuth) {
+if ($sessUser) {
     header('Location: /');
     exit;
 }
@@ -23,19 +23,16 @@ if (($_SERVER['REQUEST_METHOD'] ?? null) === 'POST') {
     if (!$errors) {
         $errAuth = 'Пользователя с указанными адресом и паролем не существует';
         $pass = false;
-        $userId = getUserId($dbConnection, $formData['email']);
+        $userInfo = getUserByEmail($dbConnection, $formData['email']);
 
-        if ($userId) {
-            $pass = password_verify($formData['password'], $userId['password']);
+        if ($userInfo) {
+            $pass = password_verify($formData['password'], $userInfo['password']);
         }
 
         if ($pass) {
             dbClose($dbConnection);
-            unset($userId['password']);
-            if (session_status() === PHP_SESSION_NONE && session_start()) {
-                $_SESSION['user'] = $userId;
-                session_write_close();
-            }
+            unset($userInfo['password']);
+            $_SESSION['user'] = $userInfo;
             header('Location: /');
             exit;
         }

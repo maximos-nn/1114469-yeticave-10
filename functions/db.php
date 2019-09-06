@@ -264,7 +264,7 @@ function isEmailExists(mysqli $dbConnection, string $email): bool
  * @param string $email Email пользователя
  * @return array Запись в виде ассоциативного массива
  */
-function getUserId(mysqli $dbConnection, string $email): array
+function getUserByEmail(mysqli $dbConnection, string $email): array
 {
     $sqlQuery = 'SELECT id, `name`, avatar_path, `password` FROM users WHERE email=?';
     return dbFetchStmtData($dbConnection, $sqlQuery, [$email])[0] ?? [];

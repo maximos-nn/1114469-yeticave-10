@@ -1,13 +1,8 @@
 <?php
-$isAuth = false;
-$userName = '';
-$sessUser = null;
-if (session_status() === PHP_SESSION_NONE && session_start()) {
-    $sessUser = $_SESSION['user'] ?? null;
-    $isAuth = (bool)$sessUser;
-    $userName = $_SESSION['user']['name'] ?? '';
-    session_write_close();
+if (!session_start()) {
+    exit('Не удалось запустить сессию.');
 }
+$sessUser = $_SESSION['user'] ?? null;
 
 date_default_timezone_set('Europe/Moscow');
 require 'functions/template.php';
