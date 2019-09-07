@@ -19,13 +19,20 @@ if (!$lot) {
 }
 
 $navigation = includeTemplate('navigation.php', ['categories' => $categories]);
-$mainContent = includeTemplate('lot-details.php', ['navigation' => $navigation, 'lot' => $lot]);
+$mainContent = includeTemplate(
+    'lot-details.php',
+    [
+        'navigation' => $navigation,
+        'lot' => $lot,
+        'isAuth' => (bool)$sessUser
+    ]
+);
 $layoutContent = includeTemplate(
     'layout.php',
     [
         'pageTitle' => $lot['name'],
-        'is_auth' => $is_auth,
-        'user_name' => $user_name,
+        'isAuth' => (bool)$sessUser,
+        'userName' => $sessUser['name'] ?? '',
         'navigation' => $navigation,
         'mainContent' => $mainContent
     ]

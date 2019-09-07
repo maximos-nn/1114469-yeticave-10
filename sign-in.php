@@ -14,31 +14,30 @@ $dbConnection = dbConnect($config['db']);
 if (($_SERVER['REQUEST_METHOD'] ?? null) === 'POST') {
     $rules = [
         'email' => $validateAuthEmail,
-        'password' => $validateAuthPass,
-        'name' => $validateAuthName,
-        'message' => $validateAuthContacts
+        'password' => $validateAuthPass
     ];
 
     $formData = trimItems($_POST);
     $errors = validateForm($rules, $formData);
-    if (empty($errors['email']) && isEmailExists($dbConnection, $formData['email'])) {
-        $errors = array_merge($errors, ['email' => 'Пользователь уже существует']);
-    }
 
     if (!$errors) {
-        $user = [
-            $formData['email'],
-            $formData['name'],
-            password_hash($formData['password'], PASSWORD_BCRYPT),
-            $formData['message']
-        ];
-        $userId = createUser($dbConnection, $user);
-        dbClose($dbConnection);
-        if (!$userId) {
-            exit('Не удалось добавить пользователя');
+        $errAuth = 'Пользователя с указанными адресом и паролем не существует';
+        $pass = false;
+        $userInfo = getUserByEmail($dbConnection, $formData['email']);
+
+        if ($userInfo) {
+            $pass = password_verify($formData['password'], $userInfo['password']);
         }
-        header('Location: sign-in.php');
-        exit;
+
+        if ($pass) {
+            dbClose($dbConnection);
+            unset($userInfo['password']);
+            $_SESSION['user'] = $userInfo;
+            header('Location: /');
+            exit;
+        }
+
+        $errors = array_merge(['email' => $errAuth], ['password' => $errAuth]);
     }
 }
 
@@ -47,13 +46,13 @@ dbClose($dbConnection);
 
 $navigation = includeTemplate('navigation.php', ['categories' => $categories]);
 $mainContent = includeTemplate(
-    'sign-up.php',
+    'sign-in.php',
     ['navigation' => $navigation, 'errors' => $errors, 'form' => $formData]
 );
 $layoutContent = includeTemplate(
     'layout.php',
     [
-        'pageTitle' => 'Регистрация',
+        'pageTitle' => 'Вход',
         'isAuth' => (bool)$sessUser,
         'userName' => $sessUser['name'] ?? '',
         'navigation' => $navigation,

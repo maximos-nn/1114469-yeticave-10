@@ -23,11 +23,11 @@
         <a class="main-header__add-lot button" href="add.php">Добавить лот</a>
 
         <nav class="user-menu">
-            <?php if ($is_auth): ?>
+            <?php if ($isAuth): ?>
                 <div class="user-menu__logged">
-                    <p><?= $user_name ?></p>
+                    <p><?= $userName ?></p>
                     <a class="user-menu__bets" href="pages/my-bets.html">Мои ставки</a>
-                    <a class="user-menu__logout" href="#">Выход</a>
+                    <a class="user-menu__logout" href="sign-out.php">Выход</a>
                 </div>
             <?php else: ?>
                 <ul class="user-menu__list">
@@ -35,7 +35,7 @@
                         <a href="sign-up.php">Регистрация</a>
                     </li>
                     <li class="user-menu__item">
-                        <a href="#">Вход</a>
+                        <a href="sign-in.php">Вход</a>
                     </li>
                 </ul>
             <?php endif; ?>

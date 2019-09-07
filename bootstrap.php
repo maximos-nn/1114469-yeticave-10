@@ -1,7 +1,8 @@
 <?php
-$is_auth = rand(0, 1);
-
-$user_name = 'maximos';
+if (!session_start()) {
+    exit('Не удалось запустить сессию.');
+}
+$sessUser = $_SESSION['user'] ?? null;
 
 date_default_timezone_set('Europe/Moscow');
 require 'functions/template.php';

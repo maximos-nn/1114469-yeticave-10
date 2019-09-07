@@ -1,6 +1,11 @@
 <?php
 require 'bootstrap.php';
 
+if (!$sessUser) {
+    http_response_code(403);
+    showError('Доступ только для зарегистрированных пользователей', '403');
+}
+
 $errors = [];
 $formData = [];
 
@@ -29,13 +34,16 @@ if (($_SERVER['REQUEST_METHOD'] ?? null) === 'POST') {
     }
 
     if (!$errors) {
+        if (empty($sessUser['id'])) {
+            exit('Некорректный идентификатор пользователя');
+        }
         $lot = [
             $formData['lot-name'],
             $fileName,
             $formData['lot-rate'],
             $formData['lot-date'],
             $formData['lot-step'],
-            1,
+            $sessUser['id'],
             $formData['category'],
             $formData['message']
         ];
@@ -58,14 +66,14 @@ dbClose($dbConnection);
 $navigation = includeTemplate('navigation.php', ['categories' => $categories]);
 $mainContent = includeTemplate(
     'add-lot.php',
-    ['navigation' => $navigation, 'errors' => $errors, 'form' => $formData]
+    ['navigation' => $navigation, 'categories' => $categories, 'errors' => $errors, 'form' => $formData]
 );
 $layoutContent = includeTemplate(
     'layout.php',
     [
         'pageTitle' => 'Добавление лота',
-        'is_auth' => $is_auth,
-        'user_name' => $user_name,
+        'isAuth' => (bool)$sessUser,
+        'userName' => $sessUser['name'] ?? '',
         'navigation' => $navigation,
         'mainContent' => $mainContent
     ]
