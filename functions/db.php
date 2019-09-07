@@ -330,7 +330,8 @@ function getBidsByUserId(mysqli $dbConnection, int $id): array
         bids b JOIN lots l ON b.lot_id = l.id
         JOIN categories c ON l.category_id = c.id
         left JOIN users u ON l.user_id = u.id AND l.winner_id = b.user_id
-    WHERE b.user_id = ?';
+    WHERE b.user_id = ?
+    ORDER BY b.creation_time DESC, b.id DESC';
 
     return dbFetchStmtData($dbConnection, $sqlQuery, [$id]);
 }
