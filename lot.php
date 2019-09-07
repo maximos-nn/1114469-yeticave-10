@@ -8,14 +8,63 @@ if (!($id = getIntParam($_GET,'id'))) {
 
 $dbConnection = dbConnect($config['db']);
 
-$categories = getCategories($dbConnection);
 $lot = getLotById($dbConnection, $id);
+if (!$lot) {
+    dbClose($dbConnection);
+    http_response_code(404);
+    showError('404');
+}
+
+$errors = [];
+$formData = [];
+
+if (($_SERVER['REQUEST_METHOD'] ?? null) === 'POST' && $sessUser) {
+    $rules = [
+        'cost' => $validateLotBid
+    ];
+
+    $formData = trimItems($_POST);
+    $errors = validateForm($rules, $formData);
+
+    if (!$errors) {
+        $nextBid = calcNextBid(intval($lot['price']), intval($lot['step']));
+        if (intval($formData['cost']) < $nextBid) {
+            $errors = ['Ваша ставка должна быть не меньше ' . strval($nextBid)];
+        }
+    }
+
+    if (!$errors) {
+        $bid = [
+            $sessUser['id'],
+            $lot['id'],
+            $formData['cost']
+        ];
+        $bidId = createBid($dbConnection, $bid);
+        $lot = getLotById($dbConnection, $id);
+        $nextBid = calcNextBid(intval($lot['price']), intval($lot['step']));
+
+        if (!$bidId && intval($formData['cost']) >= $nextBid) {
+            exit('Не удалось добавить ставку');
+        }
+
+        if (!$bidId) {
+            $errors = ['Была добавлена другая ставка'];
+        }
+    }
+}
+
+$categories = getCategories($dbConnection);
+$bids = getBidsByLotId($dbConnection, $lot['id']);
 
 dbClose($dbConnection);
 
-if (!$lot) {
-    http_response_code(404);
-    showError('404');
+$canCreateBids = false;
+if ($sessUser && $lot['user'] !== $sessUser['id']) {
+    $isExpiredLot = date_create($lot['expiration']) <= date_create('today');
+    $isLastBidOwner = ($bids[0]['user'] ?? '') === $sessUser['id'];
+    if (!$isExpiredLot && !$isLastBidOwner) {
+        $canCreateBids = true;
+    }
 }
 
 $navigation = includeTemplate('navigation.php', ['categories' => $categories]);
@@ -24,7 +73,10 @@ $mainContent = includeTemplate(
     [
         'navigation' => $navigation,
         'lot' => $lot,
-        'isAuth' => (bool)$sessUser
+        'bids' => $bids,
+        'canCreateBids' => $canCreateBids,
+        'errors' => $errors,
+        'form' => $formData
     ]
 );
 $layoutContent = includeTemplate(

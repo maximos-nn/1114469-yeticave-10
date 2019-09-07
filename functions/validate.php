@@ -334,3 +334,17 @@ $validateAuthEmail = function(string $value)
     }
     return filter_var($value, FILTER_VALIDATE_EMAIL) ? '' : 'Некорректный адрес электронной почты';
 };
+
+/**
+ * Правило для проверки суммы ставки
+ *
+ * @param string $value Значение для проверки
+ * @return string Сообщение об ошибке или пустая строка при корректном значении
+ */
+$validateLotBid = function(string $value)
+{
+    if (!$value) {
+        return 'Введите сумму ставки';
+    }
+    return getIntValue($value) ? '' : 'Сумма ставки должна быть числом больше 0';
+};
