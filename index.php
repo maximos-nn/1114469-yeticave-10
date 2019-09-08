@@ -17,7 +17,8 @@ $layoutContent = includeTemplate(
         'isAuth' => (bool)$sessUser,
         'userName' => $sessUser['name'] ?? '',
         'navigation' => $navigation,
-        'mainContent' => $mainContent
+        'mainContent' => $mainContent,
+        'index' => true
     ]
 );
 print($layoutContent);

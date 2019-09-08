@@ -13,3 +13,11 @@ if (!file_exists('config.php')) {
     exit('Создайте файл config.php на основе config.sample.php и выполните настройку.');
 }
 $config = require 'config.php';
+
+ if (!($config['db'] ?? null) || !is_array($config['db'])) {
+     exit('В конфигурации не заданы настройки подключения к БД.');
+ }
+
+ if (!($config['lots_per_page'] ?? null)) {
+     exit('В конфигурации не задано количество лотов на странице.');
+ }
