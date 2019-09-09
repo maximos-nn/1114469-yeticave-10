@@ -5,5 +5,6 @@ return [
         'user' => '',
         'password' => '',
         'database' => 'yeticave'
-    ]
+    ],
+    'lots_per_page' => 9
 ];

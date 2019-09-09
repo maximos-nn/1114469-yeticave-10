@@ -148,7 +148,7 @@ function dbClose(mysqli $dbConnection): bool
  */
 function getLotById(mysqli $dbConnection, int $id): array
 {
-    $sqlQuery = 'SELECT l.id, l.title `name`, l.image_path `url`, l.expire_date expiration,
+    $sqlQuery = 'SELECT l.id, l.title `name`, l.image_path `url`, l.expire_date expiration, l.user_id user,
     IFNULL((SELECT amount FROM bids WHERE lot_id=l.id ORDER BY id DESC LIMIT 1), l.price) price,
     l.bid_step step, IFNULL(l.description, "") `description`, c.name category
     FROM lots l JOIN categories c ON l.category_id=c.id
@@ -197,11 +197,12 @@ function dbFetchStmtData(mysqli $dbConnection, string $sqlQuery, array $data = [
  */
 function createLot(mysqli $dbConnection, array $lot): ?int
 {
-    $sqlQuery = 'INSERT INTO `lots` (`title`, `image_path`, `price`, `expire_date`, `bid_step`, `user_id`, `category_id`, `description`)
+    $sqlQuery = 'INSERT INTO `lots`
+    (`title`, `image_path`, `price`, `expire_date`, `bid_step`, `user_id`, `category_id`, `description`)
     VALUES (?, ?, ?, ?, ?, ?, ?, ?)';
 
     if (!dbManipulateStmtData($dbConnection, $sqlQuery, $lot)) {
-        return '';
+        return null;
     }
     return mysqli_insert_id($dbConnection);
 }
@@ -239,7 +240,7 @@ function createUser(mysqli $dbConnection, array $user): ?int
     $sqlQuery = 'INSERT INTO `users` (`email`, `name`, `password`, `contact`) VALUES (?, ?, ?, ?)';
 
     if (!dbManipulateStmtData($dbConnection, $sqlQuery, $user)) {
-        return '';
+        return null;
     }
     return mysqli_insert_id($dbConnection);
 }
@@ -268,4 +269,107 @@ function getUserByEmail(mysqli $dbConnection, string $email): array
 {
     $sqlQuery = 'SELECT id, `name`, avatar_path, `password` FROM users WHERE email=?';
     return dbFetchStmtData($dbConnection, $sqlQuery, [$email])[0] ?? [];
+}
+
+/**
+ * Добавляет новую ставку.
+ * Ожидаемая последовательность полей:
+ * - id владельца
+ * - id лота
+ * - сумма ставки
+ *
+ * @param mysqli $dbConnection Подключение к БД
+ * @param array $bid Массив со знечениями полей записи
+ * @return integer|null Возвращает идентификатор новой записи или null в случае неудачи
+ */
+function createBid(mysqli $dbConnection, array $bid): ?int
+{
+    $sqlQuery = 'INSERT INTO bids (user_id, lot_id, amount)
+    SELECT ?, ?, ? FROM lots l
+    WHERE l.id = ?
+    AND ? >= l.bid_step + IFNULL(
+        (SELECT amount FROM bids WHERE lot_id=l.id ORDER BY id DESC LIMIT 1), l.price
+    )';
+
+    $values = array_merge($bid, [$bid[1], $bid[2]]);
+    if (!dbManipulateStmtData($dbConnection, $sqlQuery, $values)) {
+        return null;
+    }
+    return mysqli_insert_id($dbConnection);
+}
+
+/**
+ * Запрашивает историю ставок для указанного лота.
+ *
+ * @param mysqli $dbConnection Подключение к БД
+ * @param integer $id Идентификатор лота
+ * @return array Ассоциативный массив записей
+ */
+function getBidsByLotId(mysqli $dbConnection, int $id): array
+{
+    $sqlQuery = 'SELECT u.id user, u.name, b.amount, b.creation_time creation
+    FROM bids b JOIN users u ON b.user_id = u.id
+    WHERE b.lot_id = ?
+    ORDER BY b.creation_time DESC, b.id DESC';
+
+    return dbFetchStmtData($dbConnection, $sqlQuery, [$id]);
+}
+
+/**
+ * Запрашивает подробную информацию о ставках указанного пользователя.
+ *
+ * @param mysqli $dbConnection Подключение к БД
+ * @param integer $id Идентификатор пользователя
+ * @return array Ассоциативный массив записей
+ */
+function getBidsByUserId(mysqli $dbConnection, int $id): array
+{
+    $sqlQuery = 'SELECT l.id, l.title `name`, l.expire_date expiration, l.image_path `url`,
+        b.amount, b.creation_time creation, c.name category, IFNULL(u.contact, "") contact
+    FROM
+        bids b JOIN lots l ON b.lot_id = l.id
+        JOIN categories c ON l.category_id = c.id
+        left JOIN users u ON l.user_id = u.id AND l.winner_id = b.user_id
+    WHERE b.user_id = ?
+    ORDER BY b.creation_time DESC, b.id DESC';
+
+    return dbFetchStmtData($dbConnection, $sqlQuery, [$id]);
+}
+
+/**
+ * Запрашивает количество активных лотов в категории.
+ *
+ * @param mysqli $dbConnection Подключение к БД
+ * @param integer $category Идентификатор категории
+ * @return integer Количество записей
+ */
+function getCategoryLotsCount(mysqli $dbConnection, int $category): int
+{
+    $sqlQuery = 'SELECT COUNT(*)
+    FROM lots
+    WHERE expire_date > NOW() and category_id = ?';
+
+    return intval(dbFetchStmtData($dbConnection, $sqlQuery, [$category])[0]);
+}
+
+/**
+ * Запрашивает подмножество лотов указанной категории.
+ * Возвращает $limit записей со смещением $offset.
+ *
+ * @param mysqli $dbConnection
+ * @param integer $category
+ * @param integer $offset
+ * @param integer $limit
+ * @return array
+ */
+function getCategoryLots(mysqli $dbConnection, int $category, int $offset, int $limit): array
+{
+    $sqlQuery = 'SELECT l.id, l.title `name`, l.image_path `url`, l.expire_date expiration,
+    IFNULL((SELECT amount FROM bids WHERE lot_id=l.id ORDER BY id DESC LIMIT 1), l.price) price,
+    c.name category
+    FROM lots l JOIN categories c ON l.category_id=c.id
+    WHERE l.expire_date > NOW() and category_id = ?
+    ORDER BY l.creation_time DESC, l.id DESC LIMIT ? OFFSET ?';
+
+    return dbFetchStmtData($dbConnection, $sqlQuery, [$category, $limit, $offset]);
 }

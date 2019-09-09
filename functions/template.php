@@ -155,3 +155,32 @@ function calcNextBid(int $price, int $step): int
 {
     return $price + $step;
 }
+
+/**
+ * Возвращает время, прошедшее с указанной даты в человеческом формате.
+ *
+ * @param string $datetime Дата/время
+ * @return string Строковое представление
+ */
+function getTimeSince(string $datetime): string
+{
+    $value = date_create($datetime);
+    if (!$value) {
+        exit('getTimeSince: не удалось преобразовать входное значение в дату/время.');
+    }
+
+    $diff = date_diff($value, date_create());
+    $hours = date_interval_format($diff, '%h');
+    $minutes = date_interval_format($diff, '%i');
+
+    if ($value > date_create('1 hour ago')) {
+        $result = $minutes . ' ' . getNounPluralForm(intval($minutes), 'минуту', 'минуты', 'минут') . ' назад';
+    } elseif ($value > date_create('today')) {
+        $result = $hours . ' ' . getNounPluralForm(intval($hours), 'час', 'часа', 'часов') . ' назад';
+    } elseif ($value > date_create('yesterday')) {
+        $result = 'Вчера, в ' . date_format($value, 'H:i');
+    } else {
+        $result = date_format($value, 'd.m.Y в H:i');
+    }
+    return $result;
+}

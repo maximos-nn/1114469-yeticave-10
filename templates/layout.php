@@ -13,7 +13,7 @@
 <header class="main-header">
     <div class="main-header__container container">
         <h1 class="visually-hidden">YetiCave</h1>
-        <a class="main-header__logo">
+        <a class="main-header__logo" <?= ($index ?? null) ? '' : 'href="/"' ?>>
             <img src="/img/logo.svg" width="160" height="39" alt="Логотип компании YetiCave">
         </a>
         <form class="main-header__search" method="get" action="https://echo.htmlacademy.ru" autocomplete="off">
@@ -26,7 +26,7 @@
             <?php if ($isAuth): ?>
                 <div class="user-menu__logged">
                     <p><?= $userName ?></p>
-                    <a class="user-menu__bets" href="pages/my-bets.html">Мои ставки</a>
+                    <a class="user-menu__bets" href="bids.php">Мои ставки</a>
                     <a class="user-menu__logout" href="sign-out.php">Выход</a>
                 </div>
             <?php else: ?>
