@@ -2,7 +2,9 @@
   <?= $navigation ?>
   <div class="container">
     <section class="lots">
-      <?php if ($lots): ?>
+      <?php if (!$query): ?>
+      <h2>Задан пустой поисковый запрос</h2>
+      <?php elseif ($lots): ?>
       <h2>Результаты поиска по запросу «<span><?= clearSpecials($query) ?></span>»</h2>
       <ul class="lots__list">
         <?php foreach ($lots as $lot) : ?>
