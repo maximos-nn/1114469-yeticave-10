@@ -36,11 +36,11 @@ CREATE TABLE `lots` (
   `user_id` int unsigned NOT NULL,
   `winner_id` int unsigned DEFAULT NULL,
   `category_id` int unsigned NOT NULL,
+  KEY `idx_expire_date` (`expire_date`),
   KEY `idx_fk_lots_user` (`user_id`),
   KEY `idx_fk_lots_winner` (`winner_id`),
   KEY `idx_fk_lots_cat` (`category_id`),
-  FULLTEXT KEY `idx_lots_title` (`title`),
-  FULLTEXT KEY `idx_lots_description` (`description`),
+  FULLTEXT KEY `idx_lots_title_descr` (`title`, `description`),
   CONSTRAINT `fk_lots_user` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `fk_lots_winner` FOREIGN KEY (`winner_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `fk_lots_cat` FOREIGN KEY (`category_id`) REFERENCES `categories` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
