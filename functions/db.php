@@ -412,6 +412,14 @@ function searchLots(mysqli $dbConnection, string $query, int $offset, int $limit
     return dbFetchStmtData($dbConnection, $sqlQuery, [$query, $limit, $offset]);
 }
 
+/**
+ * Запрашивает информацию о победителях торгов.
+ * Возвращает контактную информаю победителей торгов, а также
+ * информацию о соответствующих лотах.
+ *
+ * @param mysqli $dbConnection Подключение к БД
+ * @return array
+ */
 function getWinners(mysqli $dbConnection): array
 {
     $sqlQuery = 'call determine_winners()';
