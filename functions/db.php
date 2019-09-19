@@ -411,3 +411,10 @@ function searchLots(mysqli $dbConnection, string $query, int $offset, int $limit
 
     return dbFetchStmtData($dbConnection, $sqlQuery, [$query, $limit, $offset]);
 }
+
+function getWinners(mysqli $dbConnection): array
+{
+    $sqlQuery = 'call determine_winners()';
+
+    return dbFetchData($dbConnection, $sqlQuery);
+}

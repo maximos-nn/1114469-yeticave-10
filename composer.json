@@ -1,0 +1,7 @@
+{
+    "name": "maximos/1114469-yeticave-10",
+    "type": "project",
+    "require": {
+        "swiftmailer/swiftmailer": "^6.2"
+    }
+}

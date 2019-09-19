@@ -1,5 +1,6 @@
 <?php
 require 'bootstrap.php';
+require 'getwinner.php';
 
 $dbConnection = dbConnect($config['db']);
 
