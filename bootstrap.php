@@ -14,14 +14,14 @@ if (!file_exists('config.php')) {
 }
 $config = require 'config.php';
 
- if (!($config['db'] ?? null) || !is_array($config['db'])) {
-     exit('В конфигурации не заданы настройки подключения к БД.');
- }
+if (!($config['db'] ?? null) || !is_array($config['db'])) {
+    exit('В конфигурации не заданы настройки подключения к БД.');
+}
 
- if (!($config['lots_per_page'] ?? null)) {
-     exit('В конфигурации не задано количество лотов на странице.');
- }
+if (!($config['lots_per_page'] ?? null)) {
+    exit('В конфигурации не задано количество лотов на странице.');
+}
 
- if (!($config['smtp'] ?? null) || !is_array($config['smtp'])) {
-    exit('В конфигурации не заданы настройки подключения SMTP-серверу.');
+if (!($config['smtp'] ?? null) || !is_array($config['smtp'])) {
+exit('В конфигурации не заданы настройки подключения SMTP-серверу.');
 }
