@@ -368,4 +368,22 @@ function checkConfig($config): void
     if (!($config['smtp'] ?? null) || !is_array($config['smtp'])) {
         exit('В конфигурации не заданы настройки подключения SMTP-серверу.');
     }
+
+    $smtp = $config['smtp'];
+    if (
+        !isset(
+            $smtp['host'],
+            $smtp['port'],
+            $smtp['user'],
+            $smtp['password'],
+            $smtp['sender']
+            )
+        || !array_key_exists('encryption', $smtp)
+        ) {
+        exit('В конфигурации SMTP заданы не все необходимые параметры.');
+    }
+
+    if (!($config['base_url'] ?? null)) {
+        exit('В конфигурации не задан URL сайта.');
+    }
 }

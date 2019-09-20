@@ -14,5 +14,6 @@ return [
         'user' => 'user@example.org',
         'password' => 'password',
         'sender' => 'user@example.org'
-    ]
+    ],
+    'base_url' => 'http://localhost'
 ];
