@@ -8,7 +8,6 @@ INSERT INTO `lots` (`title`, `image_path`, `price`, `expire_date`, `bid_step`, `
 VALUES
 ('2014 Rossignol District Snowboard',
 '/img/lot-1.jpg',
--- Как хранить? В рублях или копейках?
 10999,
 '2019-08-30',
 100,
@@ -33,12 +32,10 @@ SELECT * FROM `categories`;
 */
 SELECT l.id, l.title, l.price, l.image_path,
 (SELECT amount FROM bids WHERE lot_id=l.id ORDER BY id DESC LIMIT 1) `sum`,
--- Можно добавить поле в lots для хранения текущей цены лота
 c.name
 FROM lots l JOIN categories c ON l.category_id=c.id
 WHERE l.expire_date > NOW()
--- самые новые. наверно, ограничение должно быть
-ORDER BY l.creation_time DESC, l.id DESC; -- LIMIT x
+ORDER BY l.creation_time DESC, l.id DESC;
 
 -- показать лот по его id. Получите также название категории, к которой принадлежит лот
 SET @lot_id=1;
