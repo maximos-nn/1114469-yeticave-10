@@ -348,3 +348,24 @@ $validateLotBid = function(string $value)
     }
     return getIntValue($value) ? '' : 'Сумма ставки должна быть числом больше 0';
 };
+
+/**
+ * Выполняет базовые проверки конфигурации проекта.
+ *
+ * @param mixed $config Конфигурация проекта
+ * @return void
+ */
+function checkConfig($config): void
+{
+    if (!($config['db'] ?? null) || !is_array($config['db'])) {
+        exit('В конфигурации не заданы настройки подключения к БД.');
+    }
+
+    if (!($config['lots_per_page'] ?? null)) {
+        exit('В конфигурации не задано количество лотов на странице.');
+    }
+
+    if (!($config['smtp'] ?? null) || !is_array($config['smtp'])) {
+        exit('В конфигурации не заданы настройки подключения SMTP-серверу.');
+    }
+}
