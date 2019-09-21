@@ -264,8 +264,7 @@ function moveFile(string $tmpFileName, string $ext): string
 function trimItems(array $data): array
 {
     return array_map(
-        function(string $item)
-        {
+        function (string $item) {
             return trim($item);
         },
         $data
@@ -365,7 +364,7 @@ function checkConfig($config): void
             $smtp['user'],
             $smtp['password'],
             $smtp['sender']
-            )
+        )
         || !array_key_exists('encryption', $smtp)
         ) {
         exit('В конфигурации SMTP заданы не все необходимые параметры.');
