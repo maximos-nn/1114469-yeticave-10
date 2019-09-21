@@ -27,7 +27,7 @@ if ($query) {
 dbClose($dbConnection);
 
 $pages = [];
-$pagesCount = ceil($lotsCount / $lotsPerPage);
+$pagesCount = (int)ceil($lotsCount / $lotsPerPage);
 if ($pagesCount > 1) {
     $pages = range(1, $pagesCount);
 }

@@ -13,7 +13,7 @@
   </li>
   <?php endforeach; ?>
   <li class="pagination-item pagination-item-next">
-    <a <?= isset($pages[$currentPage + 1]) ? 'href="' . $script . '?page=' .  ($currentPage + 1) . ($queryFields ? '&' . $queryFields : '') . '"' : '' ?>>
+    <a <?= isset($pages[$currentPage]) ? 'href="' . $script . '?page=' .  ($currentPage + 1) . ($queryFields ? '&' . $queryFields : '') . '"' : '' ?>>
       Вперед
     </a>
   </li>
