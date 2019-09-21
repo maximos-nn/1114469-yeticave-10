@@ -101,8 +101,7 @@ function isDateValid(string $date): bool
  * @param string $value Значение для проверки
  * @return string Сообщение об ошибке или пустая строка при корректном значении
  */
-$validateLotName = function(string $value)
-{
+$validateLotName = function (string $value) {
     if ($value === '') {
         return 'Введите наименование лота';
     }
@@ -118,8 +117,7 @@ $validateLotName = function(string $value)
  * @param string $value Значение для проверки
  * @return string Сообщение об ошибке или пустая строка при корректном значении
  */
-$validateLotComment = function(string $value)
-{
+$validateLotComment = function (string $value) {
     return isLengthValid($value, 1) ? '' : 'Напишите описание лота';
 };
 
@@ -129,8 +127,7 @@ $validateLotComment = function(string $value)
  * @param string $value Значение для проверки
  * @return string Сообщение об ошибке или пустая строка при корректном значении
  */
-$validateLotPrice = function(string $value)
-{
+$validateLotPrice = function (string $value) {
     if (!$value) {
         return 'Введите начальную цену';
     }
@@ -143,8 +140,7 @@ $validateLotPrice = function(string $value)
  * @param string $value Значение для проверки
  * @return string Сообщение об ошибке или пустая строка при корректном значении
  */
-$validateBidStep = function(string $value)
-{
+$validateBidStep = function (string $value) {
     if (!$value) {
         return 'Введите шаг ставки';
     }
@@ -158,8 +154,7 @@ $validateBidStep = function(string $value)
  * @param array &$catIds Список допустимых вариантов категории
  * @return string Сообщение об ошибке или пустая строка при корректном значении
  */
-$validateCategory = function(string $value) use (&$catIds)
-{
+$validateCategory = function (string $value) use (&$catIds) {
     return in_array($value, $catIds, true) ? '' : 'Выберите категорию';
 };
 
@@ -169,8 +164,7 @@ $validateCategory = function(string $value) use (&$catIds)
  * @param string $value Значение для проверки
  * @return string Сообщение об ошибке или пустая строка при корректном значении
  */
-$validateLotExpire = function(string $value)
-{
+$validateLotExpire = function (string $value) {
     if (!$value) {
         return 'Введите дату завершения торгов';
     }
@@ -187,8 +181,7 @@ $validateLotExpire = function(string $value)
  * @param string &$fileName Путь и имя корректного файла
  * @return string Сообщение об ошибке или пустая строка при корректном значении
  */
-$validateImage = function(array $data) use(&$fileName)
-{
+$validateImage = function (array $data) use (&$fileName) {
     if (!isset($data['error']) || is_array($data['error'])) {
         return 'Неверные параметры запроса';
     }
@@ -285,8 +278,7 @@ function trimItems(array $data): array
  * @param string $value Значение для проверки
  * @return string Сообщение об ошибке или пустая строка при корректном значении
  */
-$validateAuthContacts = function(string $value)
-{
+$validateAuthContacts = function (string $value) {
     return isLengthValid($value, 1) ? '' : 'Напишите как с вами связаться';
 };
 
@@ -296,8 +288,7 @@ $validateAuthContacts = function(string $value)
  * @param string $value Значение для проверки
  * @return string Сообщение об ошибке или пустая строка при корректном значении
  */
-$validateAuthName = function(string $value)
-{
+$validateAuthName = function (string $value) {
     if ($value === '') {
         return 'Введите имя';
     }
@@ -310,8 +301,7 @@ $validateAuthName = function(string $value)
  * @param string $value Значение для проверки
  * @return string Сообщение об ошибке или пустая строка при корректном значении
  */
-$validateAuthPass = function(string $value)
-{
+$validateAuthPass = function (string $value) {
     if ($value === '') {
         return 'Введите пароль';
     }
@@ -324,8 +314,7 @@ $validateAuthPass = function(string $value)
  * @param string $value Значение для проверки
  * @return string Сообщение об ошибке или пустая строка при корректном значении
  */
-$validateAuthEmail = function(string $value)
-{
+$validateAuthEmail = function (string $value) {
     if ($value === '') {
         return 'Введите e-mail';
     }
@@ -341,8 +330,7 @@ $validateAuthEmail = function(string $value)
  * @param string $value Значение для проверки
  * @return string Сообщение об ошибке или пустая строка при корректном значении
  */
-$validateLotBid = function(string $value)
-{
+$validateLotBid = function (string $value) {
     if (!$value) {
         return 'Введите сумму ставки';
     }
@@ -366,7 +354,7 @@ function checkConfig($config): void
     }
 
     if (!($config['smtp'] ?? null) || !is_array($config['smtp'])) {
-        exit('В конфигурации не заданы настройки подключения SMTP-серверу.');
+        exit('В конфигурации не заданы настройки подключения к SMTP-серверу.');
     }
 
     $smtp = $config['smtp'];
