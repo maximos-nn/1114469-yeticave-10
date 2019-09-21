@@ -173,7 +173,9 @@ function getTimeSince(string $datetime): string
     $hours = date_interval_format($diff, '%h');
     $minutes = date_interval_format($diff, '%i');
 
-    if ($value > date_create('1 hour ago')) {
+    if ($value > date_create('1 minute ago')) {
+        $result = 'Меньше минуты назад';
+    } elseif ($value > date_create('1 hour ago')) {
         $result = $minutes . ' ' . getNounPluralForm(intval($minutes), 'минуту', 'минуты', 'минут') . ' назад';
     } elseif ($value > date_create('today')) {
         $result = $hours . ' ' . getNounPluralForm(intval($hours), 'час', 'часа', 'часов') . ' назад';
