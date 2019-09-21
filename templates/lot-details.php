@@ -27,7 +27,7 @@
                     </div>
             <?php if ($canCreateBids): ?>
             <form class="lot-item__form" action="lot.php?id=<?= $lot['id'] ?>" method="post" autocomplete="off">
-              <p class="lot-item__form-item form__item form__item--invalid">
+              <p class="lot-item__form-item form__item <?= isset($errors['cost']) ? 'form__item--invalid' : '' ?>">
                 <label for="cost">Ваша ставка</label>
                 <input id="cost" type="text" name="cost" placeholder="<?= formatPrice(strval(calcNextBid(intval($lot['price']), intval($lot['step'])))) ?>">
                 <span class="form__error"><?= $errors['cost'] ?? '' ?></span>

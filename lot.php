@@ -29,7 +29,7 @@ if (($_SERVER['REQUEST_METHOD'] ?? null) === 'POST' && $sessUser) {
     if (!$errors) {
         $nextBid = calcNextBid(intval($lot['price']), intval($lot['step']));
         if (intval($formData['cost']) < $nextBid) {
-            $errors = ['Ваша ставка должна быть не меньше ' . strval($nextBid)];
+            $errors = ['cost' => 'Ваша ставка должна быть не меньше ' . strval($nextBid)];
         }
     }
 
