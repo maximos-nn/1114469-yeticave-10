@@ -105,7 +105,7 @@ $validateLotName = function (string $value) {
     if ($value === '') {
         return 'Введите наименование лота';
     }
-    if (!preg_match('/^[-а-яёa-z0-9\/ ]+$/iu', $value)) {
+    if (!preg_match('/^[-а-яёa-z0-9\/.() ]+$/iu', $value)) {
         return 'В строке присутствуют недопустимые символы';
     }
     return isLengthValid($value, 1, 255) ? '' : 'Поле нужно заполнить, и оно не должно превышать 255 символов';
