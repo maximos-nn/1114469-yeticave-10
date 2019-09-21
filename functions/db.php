@@ -345,11 +345,11 @@ function getBidsByUserId(mysqli $dbConnection, int $id): array
  */
 function getCategoryLotsCount(mysqli $dbConnection, int $category): int
 {
-    $sqlQuery = 'SELECT COUNT(*)
+    $sqlQuery = 'SELECT COUNT(*) total
     FROM lots
     WHERE expire_date > NOW() and category_id = ?';
 
-    return intval(dbFetchStmtData($dbConnection, $sqlQuery, [$category])[0]);
+    return intval(dbFetchStmtData($dbConnection, $sqlQuery, [$category])[0]['total']);
 }
 
 /**
