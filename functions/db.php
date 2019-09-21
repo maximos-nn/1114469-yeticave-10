@@ -383,11 +383,11 @@ function getCategoryLots(mysqli $dbConnection, int $category, int $offset, int $
  */
 function getSearchResultsCount(mysqli $dbConnection, string $query): int
 {
-    $sqlQuery = 'SELECT COUNT(*)
+    $sqlQuery = 'SELECT COUNT(*) total
     FROM lots
-    WHERE MATCH(title, `description`) AGAINST(?)';
+    WHERE expire_date > NOW() AND MATCH(title, `description`) AGAINST(?)';
 
-    return intval(dbFetchStmtData($dbConnection, $sqlQuery, [$query])[0]);
+    return intval(dbFetchStmtData($dbConnection, $sqlQuery, [$query])[0]['total']);
 }
 
 /**
