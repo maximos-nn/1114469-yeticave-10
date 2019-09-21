@@ -21,8 +21,10 @@
           <div class="rates__img">
             <img src="<?= clearSpecials($bid['url']) ?>" width="54" height="40" alt="Фотография лота">
           </div>
-          <h3 class="rates__title"><a href="lot.php?id=<?= $bid['id'] ?>"><?= clearSpecials($bid['name']) ?></a></h3>
-          <?= $bid['contact'] ? '<p>' . clearSpecials($bid['contact']) . '</p>' : '' ?>
+          <div>
+            <h3 class="rates__title"><a href="lot.php?id=<?= $bid['id'] ?>"><?= clearSpecials($bid['name']) ?></a></h3>
+            <p><?= clearSpecials($bid['contact']) ?></p>
+          </div>
         </td>
         <td class="rates__category">
           <?= clearSpecials($bid['category']) ?>
