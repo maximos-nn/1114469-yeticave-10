@@ -5,15 +5,19 @@
     <table class="rates__list">
       <?php foreach($bids as $bid): ?>
       <?php
+        $expiration = getTimeUntil($bid['expiration']);
         if ($bid['contact']) {
             $ratesItemClass = 'rates__item--win';
-            $timerClass = 'timer timer--win';
+            $timerClass = 'timer--win';
+            $timerContent = 'Ставка выиграла';
         } elseif (date_create($bid['expiration']) <= date_create()) {
             $ratesItemClass = 'rates__item--end';
-            $timerClass = 'timer timer--end';
+            $timerClass = 'timer--end';
+            $timerContent = 'Торги окончены';
         } else {
             $ratesItemClass = '';
-            $timerClass = '';
+            $timerClass = $expiration['hours'] === '00' ? 'timer--finishing' : '';
+            $timerContent = $expiration['hours'] . ':' . $expiration['minutes'];
         }
       ?>
       <tr class="rates__item <?= $ratesItemClass ?>">
@@ -30,10 +34,7 @@
           <?= clearSpecials($bid['category']) ?>
         </td>
         <td class="rates__timer">
-          <?php $expiration = getTimeUntil(clearSpecials($bid['expiration'])); ?>
-          <div class="timer <?= $timerClass ?? ($expiration['hours'] === '00' ? 'timer--finishing' : '') ?>">
-            <?= $bid['contact'] ? 'Ставка выиграла' : $expiration['hours'] . ':' . $expiration['minutes'] ?>
-          </div>
+          <div class="timer <?= $timerClass ?>"><?= $timerContent ?></div>
         </td>
         <td class="rates__price">
           <?= formatPrice(clearSpecials($bid['amount'])) ?>
