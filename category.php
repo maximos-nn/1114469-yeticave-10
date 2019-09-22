@@ -7,7 +7,6 @@ if ($lotsPerPage <= 0) {
 }
 
 $currentPage = getIntParam($_GET, 'page') ?? 1;
-$offset = ($currentPage - 1) * $lotsPerPage;
 
 if (!($currentCategory = getIntParam($_GET,'category'))) {
     http_response_code(404);
@@ -24,15 +23,20 @@ if (!in_array(strval($currentCategory), array_column($categories, 'id'), true)) 
 }
 
 $lotsCount = getCategoryLotsCount($dbConnection, $currentCategory);
+$pagesCount = (int)ceil($lotsCount / $lotsPerPage);
+if ($pagesCount && $currentPage > $pagesCount) {
+    $currentPage = $pagesCount;
+}
+
 $lots = [];
 if ($lotsCount) {
+    $offset = ($currentPage - 1) * $lotsPerPage;
     $lots = getCategoryLots($dbConnection, $currentCategory, $offset, $lotsPerPage);
 }
 
 dbClose($dbConnection);
 
 $pages = [];
-$pagesCount = (int)ceil($lotsCount / $lotsPerPage);
 if ($pagesCount > 1) {
     $pages = range(1, $pagesCount);
 }

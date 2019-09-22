@@ -7,7 +7,6 @@ if ($lotsPerPage <= 0) {
 }
 
 $currentPage = getIntParam($_GET, 'page') ?? 1;
-$offset = ($currentPage - 1) * $lotsPerPage;
 
 $query = $_GET['search'] ?? '';
 
@@ -16,10 +15,15 @@ $dbConnection = dbConnect($config['db']);
 $categories = getCategories($dbConnection);
 
 $lots = [];
-$lotsCount = 0;
+$pagesCount = 0;
 if ($query) {
     $lotsCount = getSearchResultsCount($dbConnection, $query);
+    $pagesCount = (int)ceil($lotsCount / $lotsPerPage);
+    if ($pagesCount && $currentPage > $pagesCount) {
+        $currentPage = $pagesCount;
+    }
     if ($lotsCount) {
+        $offset = ($currentPage - 1) * $lotsPerPage;
         $lots = searchLots($dbConnection, $query, $offset, $lotsPerPage);
     }
 }
@@ -27,7 +31,6 @@ if ($query) {
 dbClose($dbConnection);
 
 $pages = [];
-$pagesCount = (int)ceil($lotsCount / $lotsPerPage);
 if ($pagesCount > 1) {
     $pages = range(1, $pagesCount);
 }
