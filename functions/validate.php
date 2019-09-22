@@ -348,8 +348,11 @@ function checkConfig($config): void
         exit('В конфигурации не заданы настройки подключения к БД.');
     }
 
-    if (!($config['lots_per_page'] ?? null)) {
+    if (!($lotsPerPage = $config['lots_per_page'] ?? null)) {
         exit('В конфигурации не задано количество лотов на странице.');
+    }
+    if (intval($lotsPerPage) <= 0) {
+        exit('В конфигурации задано некорректное количество лотов на странице.');
     }
 
     if (!($config['smtp'] ?? null) || !is_array($config['smtp'])) {

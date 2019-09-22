@@ -2,9 +2,6 @@
 require 'bootstrap.php';
 
 $lotsPerPage = intval($config['lots_per_page']);
-if ($lotsPerPage <= 0) {
-    exit('В конфигурации задано некорректное количество лотов на странице.');
-}
 
 $currentPage = getIntParam($_GET, 'page') ?? 1;
 
