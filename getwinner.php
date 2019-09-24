@@ -1,6 +1,6 @@
 <?php
-require_once 'bootstrap.php';
-require 'functions/mail.php';
+require_once __DIR__ . '/bootstrap.php';
+require __DIR__ . '/functions/mail.php';
 
 $dbConnection = dbConnect($config['db']);
 

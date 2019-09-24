@@ -1,6 +1,9 @@
 <?php
-require 'bootstrap.php';
-require 'getwinner.php';
+require_once __DIR__ . '/bootstrap.php';
+
+// Скрипт определения победителья не нужно подключать здесь.
+// В боевых проектах он должен вызываться по планировщику.
+// А для теста при проверке мы вызываем его вручную
 
 $dbConnection = dbConnect($config['db']);
 

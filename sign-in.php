@@ -1,5 +1,5 @@
 <?php
-require 'bootstrap.php';
+require_once __DIR__ . '/bootstrap.php';
 
 if ($sessUser) {
     header('Location: /');
@@ -21,23 +21,14 @@ if (($_SERVER['REQUEST_METHOD'] ?? null) === 'POST') {
     $errors = validateForm($rules, $formData);
 
     if (!$errors) {
-        $errAuth = 'Пользователя с указанными адресом и паролем не существует';
-        $pass = false;
-        $userInfo = getUserByEmail($dbConnection, $formData['email']);
-
-        if ($userInfo) {
-            $pass = password_verify($formData['password'], $userInfo['password']);
-        }
-
-        if ($pass) {
+        if ($userInfo = authenticate($dbConnection, $formData)) {
             dbClose($dbConnection);
             unset($userInfo['password']);
             $_SESSION['user'] = $userInfo;
             header('Location: /');
             exit;
         }
-
-        $errors = array_merge(['email' => $errAuth], ['password' => $errAuth]);
+        $errors['email'] = 'Пользователя с указанными адресом и паролем не существует';
     }
 }
 

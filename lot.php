@@ -1,7 +1,8 @@
 <?php
-require 'bootstrap.php';
+require_once __DIR__ . '/bootstrap.php';
 
-if (!($id = getIntParam($_GET,'id'))) {
+$id = getIntParam($_GET,'id');
+if (!$id) {
     http_response_code(404);
     showError('404');
 }
@@ -19,37 +20,12 @@ $errors = [];
 $formData = [];
 
 if (($_SERVER['REQUEST_METHOD'] ?? null) === 'POST' && $sessUser) {
-    $rules = [
-        'cost' => $validateLotBid
-    ];
 
     $formData = trimItems($_POST);
-    $errors = validateForm($rules, $formData);
+    $errors = validateBidForm($formData, $lot);
 
-    if (!$errors) {
-        $nextBid = calcNextBid(intval($lot['price']), intval($lot['step']));
-        if (intval($formData['cost']) < $nextBid) {
-            $errors = ['cost' => 'Ваша ставка должна быть не меньше ' . strval($nextBid)];
-        }
-    }
-
-    if (!$errors) {
-        $bid = [
-            $sessUser['id'],
-            $lot['id'],
-            $formData['cost']
-        ];
-        $bidId = createBid($dbConnection, $bid);
-        $lot = getLotById($dbConnection, $id);
-        $nextBid = calcNextBid(intval($lot['price']), intval($lot['step']));
-
-        if (!$bidId && intval($formData['cost']) >= $nextBid) {
-            exit('Не удалось добавить ставку');
-        }
-
-        if (!$bidId) {
-            $errors = ['Была добавлена другая ставка'];
-        }
+    if (!$errors && !addBid($dbConnection, $sessUser, $formData, $lot)) {
+        $errors['cost'] = 'Была добавлена другая ставка';
     }
 }
 
@@ -58,14 +34,7 @@ $bids = getBidsByLotId($dbConnection, $lot['id']);
 
 dbClose($dbConnection);
 
-$canCreateBids = false;
-if ($sessUser && $lot['user'] !== $sessUser['id']) {
-    $isExpiredLot = date_create($lot['expiration']) <= date_create('today');
-    $isLastBidOwner = ($bids[0]['user'] ?? '') === $sessUser['id'];
-    if (!$isExpiredLot && !$isLastBidOwner) {
-        $canCreateBids = true;
-    }
-}
+$canCreateBids = isCanCreateBids($sessUser, $lot, $bids);
 
 $navigation = includeTemplate('navigation.php', ['categories' => $categories]);
 $mainContent = includeTemplate(

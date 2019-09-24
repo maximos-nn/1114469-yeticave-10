@@ -1,5 +1,5 @@
 <?php
-require 'bootstrap.php';
+require_once __DIR__ . '/bootstrap.php';
 
 if (!$sessUser) {
     http_response_code(403);

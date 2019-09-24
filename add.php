@@ -1,5 +1,5 @@
 <?php
-require 'bootstrap.php';
+require_once __DIR__ . '/bootstrap.php';
 
 if (!$sessUser) {
     http_response_code(403);
@@ -30,13 +30,10 @@ if (($_SERVER['REQUEST_METHOD'] ?? null) === 'POST') {
     $errors = validateForm($rules, $formData);
     $imageError = $validateImage($_FILES['lot-img'] ?? []);
     if ($imageError) {
-        $errors = array_merge($errors, ['lot-img' => $imageError]);
+        $errors['lot-img'] = $imageError;
     }
 
     if (!$errors) {
-        if (empty($sessUser['id'])) {
-            exit('Некорректный идентификатор пользователя');
-        }
         $lot = [
             $formData['lot-name'],
             $fileName,
