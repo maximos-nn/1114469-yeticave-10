@@ -2,6 +2,7 @@
     "name": "maximos/1114469-yeticave-10",
     "type": "project",
     "require": {
+        "ext-mysqli": "*",
         "swiftmailer/swiftmailer": "^6.2"
     }
 }
