@@ -1,3 +1,10 @@
+<?php
+/** @var string $navigation */
+/** @var array $lot */
+/** @var array $bids */
+/** @var bool $canCreateBids */
+/** @var array $errors */
+?>
 <main>
     <?= $navigation ?>
     <section class="lot-item container">
@@ -26,7 +33,7 @@
                         </div>
                     </div>
             <?php if ($canCreateBids): ?>
-            <form class="lot-item__form" action="lot.php?id=<?= $lot['id'] ?>" method="post" autocomplete="off">
+            <form class="lot-item__form" action="/lot.php?id=<?= $lot['id'] ?>" method="post" autocomplete="off">
               <p class="lot-item__form-item form__item <?= isset($errors['cost']) ? 'form__item--invalid' : '' ?>">
                 <label for="cost">Ваша ставка</label>
                 <input id="cost" type="text" name="cost" placeholder="<?= formatPrice(strval(calcNextBid(intval($lot['price']), intval($lot['step'])))) ?>">

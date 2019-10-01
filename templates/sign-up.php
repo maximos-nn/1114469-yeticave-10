@@ -1,6 +1,11 @@
+<?php
+/** @var string $navigation */
+/** @var array $errors */
+/** @var array $form */
+?>
 <main>
   <?= $navigation ?>
-  <form class="form container <?= $errors ? 'form--invalid' : '' ?>" action="sign-up.php" method="post" autocomplete="off">
+  <form class="form container <?= $errors ? 'form--invalid' : '' ?>" action="/sign-up.php" method="post" autocomplete="off">
     <h2>Регистрация нового аккаунта</h2>
     <div class="form__item <?= isset($errors['email']) ? 'form__item--invalid' : '' ?>">
       <label for="email">E-mail <sup>*</sup></label>
@@ -24,6 +29,6 @@
     </div>
     <span class="form__error form__error--bottom">Пожалуйста, исправьте ошибки в форме.</span>
     <button type="submit" class="button">Зарегистрироваться</button>
-    <a class="text-link" href="sign-in.php">Уже есть аккаунт</a>
+    <a class="text-link" href="/sign-in.php">Уже есть аккаунт</a>
   </form>
 </main>

@@ -1,6 +1,11 @@
+<?php
+/** @var string $navigation */
+/** @var array $errors */
+/** @var array $form */
+?>
 <main>
   <?= $navigation ?>
-  <form class="form container <?= $errors ? 'form--invalid' : '' ?>" action="sign-in.php" method="post">
+  <form class="form container <?= $errors ? 'form--invalid' : '' ?>" action="/sign-in.php" method="post">
     <h2>Вход</h2>
     <div class="form__item <?= isset($errors['email']) ? 'form__item--invalid' : '' ?>">
       <label for="email">E-mail <sup>*</sup></label>

@@ -44,8 +44,7 @@ $mainContent = includeTemplate(
         'lot' => $lot,
         'bids' => $bids,
         'canCreateBids' => $canCreateBids,
-        'errors' => $errors,
-        'form' => $formData
+        'errors' => $errors
     ]
 );
 $layoutContent = includeTemplate(

@@ -1,3 +1,7 @@
+<?php
+/** @var string $navigation */
+/** @var array $bids */
+?>
 <main>
   <?= $navigation ?>
   <section class="rates container">
@@ -26,7 +30,7 @@
             <img src="<?= clearSpecials($bid['url']) ?>" width="54" height="40" alt="Фотография лота">
           </div>
           <div>
-            <h3 class="rates__title"><a href="lot.php?id=<?= $bid['id'] ?>"><?= clearSpecials($bid['name']) ?></a></h3>
+            <h3 class="rates__title"><a href="/lot.php?id=<?= $bid['id'] ?>"><?= clearSpecials($bid['name']) ?></a></h3>
             <p><?= clearSpecials($bid['contact']) ?></p>
           </div>
         </td>

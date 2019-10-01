@@ -1,3 +1,9 @@
+<?php
+/** @var string $userName */
+/** @var string $lotUrl */
+/** @var string $title */
+/** @var string $bidsUrl */
+?>
 <h1>Поздравляем с победой</h1>
 <p>Здравствуйте, <?= clearSpecials($userName) ?></p>
 <p>Ваша ставка для лота <a href="<?= $lotUrl ?>"><?= clearSpecials($title) ?></a> победила.</p>
