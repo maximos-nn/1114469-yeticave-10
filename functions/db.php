@@ -74,8 +74,7 @@ function getCategories(mysqli $dbConnection): array
 function getActiveLots(mysqli $dbConnection): array
 {
     $sqlQuery = 'SELECT l.id, l.title `name`, l.image_path `url`, l.expire_date expiration,
-    IFNULL((SELECT amount FROM bids WHERE lot_id=l.id ORDER BY id DESC LIMIT 1), l.price) price,
-    c.name category
+        l.price, c.name category
     FROM lots l JOIN categories c ON l.category_id=c.id
     WHERE l.expire_date > NOW()
     ORDER BY l.creation_time DESC, l.id DESC LIMIT 9';
