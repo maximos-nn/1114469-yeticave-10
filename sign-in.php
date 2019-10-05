@@ -12,13 +12,8 @@ $formData = [];
 $dbConnection = dbConnect($config['db']);
 
 if (($_SERVER['REQUEST_METHOD'] ?? null) === 'POST') {
-    $rules = [
-        'email' => $validateAuthEmail,
-        'password' => $validateAuthPass
-    ];
-
     $formData = trimItems($_POST);
-    $errors = validateForm($rules, $formData);
+    $errors = validateSignInForm($formData);
 
     if (!$errors) {
         if ($userInfo = authenticate($dbConnection, $formData)) {

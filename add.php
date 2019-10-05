@@ -17,20 +17,19 @@ if (($_SERVER['REQUEST_METHOD'] ?? null) === 'POST') {
     $catIds = array_column($categories, 'id');
     $fileName = '';
 
-    $rules = [
-        'category' => $validateCategory,
-        'lot-name' => $validateLotName,
-        'message' => $validateLotComment,
-        'lot-rate' => $validateLotPrice,
-        'lot-step' => $validateBidStep,
-        'lot-date' => $validateLotExpire
-    ];
-
     $formData = trimItems($_POST);
-    $errors = validateForm($rules, $formData);
-    $imageError = $validateImage($_FILES['lot-img'] ?? []);
-    if ($imageError) {
-        $errors['lot-img'] = $imageError;
+    $errors = validateLotForm($formData, $catIds, $_FILES['lot-img'] ?? [], $config['image_types']);
+
+    if (!$errors) {
+        // Не проверяем расширение, так как оно должно обязательно находиться после успешной валидации.
+        // Даже если оно окажется по каким-то приичнам пустым, это нас тоже вполне устраивает.
+        $fileName = moveFile(
+            $_FILES['lot-img']['tmp_name'],
+            getFileExtension($_FILES['lot-img']['tmp_name'], $config['image_types'])
+        );
+        if (!$fileName) {
+            $errors['lot-img'] = 'Ошибка сохранения файла';
+        }
     }
 
     if (!$errors) {

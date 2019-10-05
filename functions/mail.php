@@ -29,7 +29,7 @@ function sendMailToWinners(array $config, array $winners): void
     foreach ($winners as $winner) {
         setMailMessageData($message, $winner, $config['base_url']);
 
-        if (! $mailer -> send($message)) {
+        if (!$mailer->send($message)) {
             $failedRecipients[] = $winner['email'];
         }
     }
@@ -50,8 +50,8 @@ function getMailTransport(array $config): Swift_SmtpTransport
         $config['port'],
         $config['encryption']
     );
-    $transport -> setUsername($config['user']);
-    $transport -> setPassword($config['password']);
+    $transport->setUsername($config['user']);
+    $transport->setPassword($config['password']);
     return $transport;
 }
 
@@ -65,7 +65,7 @@ function getMailTransport(array $config): Swift_SmtpTransport
 function getMailMessage(string $sender, string $subject): Swift_Message
 {
     $message = new Swift_Message($subject);
-    $message -> setFrom($sender);
+    $message->setFrom($sender);
     return $message;
 }
 
@@ -79,14 +79,14 @@ function getMailMessage(string $sender, string $subject): Swift_Message
  */
 function setMailMessageData(Swift_Message $message, array $winner, string $baseUrl): void
 {
-    $message -> setTo($winner['email']);
+    $message->setTo($winner['email']);
     $recipient = [
         'userName' => $winner['name'],
         'lotUrl' => $baseUrl . '/lot.php?id=' . $winner['lotId'],
         'title' => $winner['title'],
         'bidsUrl' => $baseUrl . '/bids.php'
     ];
-    $message -> setBody(
+    $message->setBody(
         includeTemplate('email.php', $recipient),
         'text/html'
     );

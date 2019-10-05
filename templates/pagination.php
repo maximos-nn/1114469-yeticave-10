@@ -1,3 +1,9 @@
+<?php
+/** @var array $pages */
+/** @var int|null $currentPage */
+/** @var string $script */
+/** @var string $queryFields */
+?>
 <?php if ($pages): ?>
 <ul class="pagination-list">
   <li class="pagination-item pagination-item-prev">

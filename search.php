@@ -38,7 +38,7 @@ $pagination = includeTemplate(
     [
         'pages' => $pages,
         'currentPage' => $currentPage,
-        'script' => 'search.php',
+        'script' => '/search.php',
         'queryFields' => 'search=' . $query
     ]
 );

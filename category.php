@@ -48,7 +48,7 @@ $pagination = includeTemplate(
     [
         'pages' => $pages,
         'currentPage' => $currentPage,
-        'script' => 'category.php',
+        'script' => '/category.php',
         'queryFields' => 'category=' . $currentCategory
     ]
 );
