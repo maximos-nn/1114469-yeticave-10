@@ -6,15 +6,16 @@
  * @param string $value Значение для проверки
  * @return string Сообщение об ошибке или пустая строка при корректном значении
  */
-$validateLotName = function (string $value) {
-    if ($value === '') {
+function validateLotName(string $name): string
+{
+    if ($name === '') {
         return 'Введите наименование лота';
     }
-    if (!preg_match('/^[-а-яёa-z0-9\/.() ]+$/iu', $value)) {
+    if (!preg_match('/^[-а-яёa-z0-9\/.() ]+$/iu', $name)) {
         return 'В строке присутствуют недопустимые символы';
     }
-    return isLengthValid($value, 1, 255) ? '' : 'Поле нужно заполнить, и оно не должно превышать 255 символов';
-};
+    return isLengthValid($name, 1, 255) ? '' : 'Поле нужно заполнить, и оно не должно превышать 255 символов';
+}
 
 /**
  * Правило для проверки описания лота
@@ -22,9 +23,10 @@ $validateLotName = function (string $value) {
  * @param string $value Значение для проверки
  * @return string Сообщение об ошибке или пустая строка при корректном значении
  */
-$validateLotComment = function (string $value) {
-    return isLengthValid($value, 1) ? '' : 'Напишите описание лота';
-};
+function validateLotComment(string $comment): string
+{
+    return isLengthValid($comment, 1) ? '' : 'Напишите описание лота';
+}
 
 /**
  * Правило для проверки цены лота
@@ -32,12 +34,13 @@ $validateLotComment = function (string $value) {
  * @param string $value Значение для проверки
  * @return string Сообщение об ошибке или пустая строка при корректном значении
  */
-$validateLotPrice = function (string $value) {
-    if (!$value) {
+function validateLotPrice(string $price): string
+{
+    if (!$price) {
         return 'Введите начальную цену';
     }
-    return getIntValue($value) ? '' : 'Цена должна быть числом больше 0';
-};
+    return getIntValue($price) ? '' : 'Цена должна быть числом больше 0';
+}
 
 /**
  * Правило для проверки шага ставки
@@ -45,24 +48,25 @@ $validateLotPrice = function (string $value) {
  * @param string $value Значение для проверки
  * @return string Сообщение об ошибке или пустая строка при корректном значении
  */
-$validateBidStep = function (string $value) {
-    if (!$value) {
+function validateBidStep(string $step): string
+{
+    if (!$step) {
         return 'Введите шаг ставки';
     }
-    return getIntValue($value) ? '' : 'Шаг ставки должен быть числом больше 0';
-};
+    return getIntValue($step) ? '' : 'Шаг ставки должен быть числом больше 0';
+}
 
 /**
  * Правило для проверки категории лота
  *
  * @param string $value Значение для проверки
- * @param array &$catIds Список допустимых вариантов категории
+ * @param array $catIds Список допустимых вариантов категории
  * @return string Сообщение об ошибке или пустая строка при корректном значении
  */
-// TODO лушче не использовать use, так как функция будет зависеть от окружения.  Смотри файл Refactoring.md
-$validateCategory = function (string $value) use (&$catIds) {
+function validateCategory(string $value, array $catIds): string
+{
     return in_array($value, $catIds, true) ? '' : 'Выберите категорию';
-};
+}
 
 /**
  * Правило для проверки даты завершения торгов
@@ -70,25 +74,26 @@ $validateCategory = function (string $value) use (&$catIds) {
  * @param string $value Значение для проверки
  * @return string Сообщение об ошибке или пустая строка при корректном значении
  */
-$validateLotExpire = function (string $value) {
-    if (!$value) {
+function validateLotExpire(string $date): string
+{
+    if (!$date) {
         return 'Введите дату завершения торгов';
     }
-    if (!isDateValid($value)) {
+    if (!isDateValid($date)) {
         return 'Дата должна быть в формате "ГГГГ-ММ-ДД"';
     }
-    return date_create($value) > date_create('tomorrow') ? '' : 'Дата должна быть больше завтрашней';
-};
+    return date_create($date) > date_create('tomorrow') ? '' : 'Дата должна быть больше завтрашней';
+}
 
 /**
  * Правило для проверки файла изображения лота
  *
  * @param array $data Данные о загруженном файле
- * @param string &$fileName Путь и имя корректного файла
+ * @param array imageTypes Массив типов изображений
  * @return string Сообщение об ошибке или пустая строка при корректном значении
  */
-// TODO смотри файл Refactoring.md
-$validateImage = function (array $data) use (&$fileName) {
+function validateImage(array $data, array $imageTypes): string
+{
     if (!isset($data['error']) || is_array($data['error'])) {
         return 'Неверные параметры запроса';
     }
@@ -102,23 +107,12 @@ $validateImage = function (array $data) use (&$fileName) {
         return 'Отсутствует имя файла';
     }
 
-    $types = ['png' => 'image/png', 'jpg' => 'image/jpeg'];
-    $ext = array_search(
-        mime_content_type($data['tmp_name']),
-        $types,
-        true
-    );
-    if (!$ext) {
-        return 'Неверный формат файла. Ожидалось: ' . implode(', ', array_values($types));
+    if (!getFileExtension($data['tmp_name'], $imageTypes)) {
+        return 'Неверный формат файла. Ожидалось: ' . implode(', ', array_values($imageTypes));
     }
 
-    $file = moveFile($data['tmp_name'], $ext);
-    if (!$file) {
-        return 'Ошибка сохранения файла';
-    }
-    $fileName = $file;
     return '';
-};
+}
 
 /**
  * Анализирует код ошибки загрузки файла.
@@ -143,4 +137,40 @@ function validateFileError(int $error): string
             $result = 'Неизвестная ошибка передачи файла';
     }
     return $result;
+}
+
+/**
+ * Производит проверку полей формы добавления лота.
+ *
+ * @param array $formData Данные формы
+ * @param array $categoryIds Идентификаторы допустимых категорий нового лота
+ * @param array $fileData Загруженный файл изображения нового лота
+ * @param array $imageTypes Допустимые типы изображений
+ * @return array Массив ошибок валидации, может быть пустым
+ */
+function validateLotForm(array $formData, array $categoryIds, array $fileData, array $imageTypes): array
+{
+    $errors = [];
+    if ($error = validateCategory($formData['category'] ?? '', $categoryIds)) {
+        $errors['category'] = $error;
+    }
+    if ($error = validateLotName($formData['lot-name'] ?? '')) {
+        $errors['lot-name'] = $error;
+    }
+    if ($error = validateLotComment($formData['message'] ?? '')) {
+        $errors['message'] = $error;
+    }
+    if ($error = validateLotPrice($formData['lot-rate'] ?? '')) {
+        $errors['lot-rate'] = $error;
+    }
+    if ($error = validateBidStep($formData['lot-step'] ?? '')) {
+        $errors['lot-step'] = $error;
+    }
+    if ($error = validateLotExpire($formData['lot-date'] ?? '')) {
+        $errors['lot-date'] = $error;
+    }
+    if ($error = validateImage($fileData, $imageTypes)) {
+        $errors['lot-img'] = $error;
+    }
+    return $errors;
 }

@@ -7,6 +7,7 @@ return [
         'database' => 'yeticave'
     ],
     'lots_per_page' => 9,
+    'image_types' => ['png' => 'image/png', 'jpg' => 'image/jpeg'],
     'smtp' => [
         'host' => 'example.org',
         'port' => '25',

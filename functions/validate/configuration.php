@@ -19,6 +19,10 @@ function checkConfig($config): void
         exit('В конфигурации задано некорректное количество лотов на странице.');
     }
 
+    if (!($config['image_types'] ?? null) || !is_array($config['image_types'])) {
+        exit('В конфигурации не заданы допустимые форматы изображений.');
+    }
+
     if (!($config['smtp'] ?? null) || !is_array($config['smtp'])) {
         exit('В конфигурации не заданы настройки подключения к SMTP-серверу.');
     }

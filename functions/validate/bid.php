@@ -12,7 +12,7 @@ function validateLotBid(string $value): string
         return 'Введите сумму ставки';
     }
     return getIntValue($value) ? '' : 'Сумма ставки должна быть числом больше 0';
-};
+}
 
 /**
  * Выполняет проверку формы добавления ставки.
@@ -23,11 +23,10 @@ function validateLotBid(string $value): string
  */
 function validateBidForm(array $formData, array $lot): array
 {
-    $rules = [
-        'cost' => 'validateLotBid'
-    ];
-
-    $errors = validateForm($rules, $formData);
+    $errors = [];
+    if ($error = validateLotBid($formData['cost'])) {
+        $errors['cost'] = $error;
+    }
     if (!$errors) {
         $nextBid = calcNextBid(intval($lot['price']), intval($lot['step']));
         if (intval($formData['cost']) < $nextBid) {

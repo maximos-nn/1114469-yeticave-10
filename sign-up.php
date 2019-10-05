@@ -12,18 +12,8 @@ $formData = [];
 $dbConnection = dbConnect($config['db']);
 
 if (($_SERVER['REQUEST_METHOD'] ?? null) === 'POST') {
-    $rules = [
-        'email' => $validateAuthEmail,
-        'password' => $validateAuthPass,
-        'name' => $validateAuthName,
-        'message' => $validateAuthContacts
-    ];
-
     $formData = trimItems($_POST);
-    $errors = validateForm($rules, $formData);
-    if (empty($errors['email']) && isEmailExists($dbConnection, $formData['email'])) {
-        $errors = array_merge($errors, ['email' => 'Пользователь уже существует']);
-    }
+    $errors = validateSignUpForm($dbConnection, $formData);
 
     if (!$errors) {
         $user = [

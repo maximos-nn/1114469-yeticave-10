@@ -1,25 +1,6 @@
 <?php
 
 /**
- * Выполняет проверку данных по заданным правилам.
- * Принимает массивы правил и данных. Ключи в них должны совпадать.
- * Возвращает массив ошибок с теми же ключами.
- * @param array $rules Массив правил
- * @param array $data Массив данных
- * @return array Массив ошибок
- */
-function validateForm(array $rules, array $data): array
-{
-    $errors = [];
-    foreach ($rules as $key => $rule) {
-        if (is_callable($rule)) {
-            $errors[$key] = $rule($data[$key] ?? '');
-        }
-    }
-    return array_filter($errors);
-}
-
-/**
  * Проверяет вхождение длины строки в указанный диапазон.
  *
  * @param string $str Строка
